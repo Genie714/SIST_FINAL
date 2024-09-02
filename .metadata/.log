@@ -652,3 +652,42 @@ Binding(CTRL+SHIFT+/,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.ui.textEditorScope,,,system)
+
+!ENTRY org.eclipse.equinox.security 1 0 2024-09-02 12:47:12.258
+!MESSAGE New keyring password generated. 
+
+!ENTRY org.eclipse.egit.core 4 0 2024-09-02 12:47:50.521
+!MESSAGE An exception occurred during push on URI https://github.com/Genie714/SIST_FINAL.git: https://github.com/Genie714/SIST_FINAL.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/Genie714/SIST_FINAL.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:538)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:434)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:127)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1335)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:191)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:211)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+
+!ENTRY org.eclipse.egit.core 4 0 2024-09-02 12:49:00.391
+!MESSAGE An exception occurred during push on URI https://github.com/Genie714/SIST_FINAL.git: https://github.com/Genie714/SIST_FINAL.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/Genie714/SIST_FINAL.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:538)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:434)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:127)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1335)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:191)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:211)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
+
+!ENTRY org.eclipse.egit.core 4 0 2024-09-02 12:50:21.902
+!MESSAGE An exception occurred during push on URI https://github.com/Genie714/SIST_FINAL.git: https://github.com/Genie714/SIST_FINAL.git: not authorized
+!STACK 0
+org.eclipse.jgit.errors.TransportException: https://github.com/Genie714/SIST_FINAL.git: not authorized
+	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:538)
+	at org.eclipse.jgit.transport.TransportHttp.openPush(TransportHttp.java:434)
+	at org.eclipse.jgit.transport.PushProcess.execute(PushProcess.java:127)
+	at org.eclipse.jgit.transport.Transport.push(Transport.java:1335)
+	at org.eclipse.egit.core.op.PushOperation.run(PushOperation.java:191)
+	at org.eclipse.egit.ui.internal.push.ConfirmationPage$2.run(ConfirmationPage.java:211)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:122)
