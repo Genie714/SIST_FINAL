@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class YourController
 {
-	@Autowired
-	private SqlSession sqlSession;
+	//@Autowired
+	//private SqlSession sqlSession;
 	
 	@RequestMapping(value = "main.action", method = RequestMethod.GET)
 	public String main(Model model)
 	{
-		return "Main";
+		return "/WEB-INF/view/Main.jsp";
 	}
 
 	@RequestMapping(value = "loginform.action", method = RequestMethod.GET)

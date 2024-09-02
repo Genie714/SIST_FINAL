@@ -19,12 +19,12 @@
 	 <!--       스프링 컨테이너가 자동으로 스캔하여 찾아낼수 있도록 처리 -->
 	 
 	 <!-- ① 기존 코드 -->
-	<context:component-scan base-package="com.test.mybatis" />
+	<context:component-scan base-package="com.test.prj" />
 	<!-- → 『base-package』 속성의 속성값으로 Controller 객체가 포함된 패키지 경로 지정 -->
 	
 	<!-- ③ mybatis 등록 과정에서 생겨나는 추가 코드2 -->
-	<!--    → ② 를 수행하는 과정에서 필요한 dataSource를 사용할 수 있도록 하기 위한 설정
-	           → 『SimpleDriverDataSource』 -->
+	<!-- → ② 를 수행하는 과정에서 필요한 dataSource를 사용할 수 있도록 하기 위한 설정
+	        → 『SimpleDriverDataSource -->
 	<bean id="localDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
 		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
@@ -40,7 +40,7 @@
 		<!-- ④ dataSource 를 등록하고 와서 다시 추가 -->
 		<property name="dataSource" ref="localDataSource"></property>
 		<!-- ⑤ 매퍼 파일 등록 → 매퍼 파일의 위치 및 형식 전달 -->
-		<property name="mapperLocations" value="classpath:com/test/mybatis/mapper/*.xml "></property>
+		<property name="mapperLocations" value="classpath:com/test/prj/mapper/*.xml "></property>
 	</bean>
 	
 	<!-- ⑥ mybatis 등록과정에서 생겨나는 추가코드 3 -->
