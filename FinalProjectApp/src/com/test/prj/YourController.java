@@ -16,7 +16,7 @@ public class YourController
 	@RequestMapping(value = "main.action", method = RequestMethod.GET)
 	public String main(Model model)
 	{
-		return "/WEB-INF/view/Main.jsp";
+		return "/WEB-INF/view/Main.jsp"; 
 	}
 
 	@RequestMapping(value = "loginform.action", method = RequestMethod.GET)
@@ -273,10 +273,25 @@ public class YourController
 	{
 		return "ComplaintInsert";
 	}
+	
+	@RequestMapping(value = "complaintinsertform.action", method = RequestMethod.GET)
+	public String complaintInsertForm(Model model)
+	{
+		return "/WEB-INF/view/ComplaintInsertForm.jsp";
+	}
 
 	@RequestMapping(value = "alarm.action", method = RequestMethod.GET)
 	public String alarm(Model model)
 	{
 		return "Alarm";
 	}
+	
+	//테스트용 삭제 예정
+	@RequestMapping(value = "complainttest.action", method = RequestMethod.GET)
+	public String complaintTest(Model model)
+	{
+		return "/WEB-INF/view/ComplainTest.jsp";
+	}
+	
+	
 }
