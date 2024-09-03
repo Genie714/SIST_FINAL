@@ -25,12 +25,6 @@ public class YourController
 		return "LoginForm";
 	}
 
-	@RequestMapping(value = "memberinsertform.action", method = RequestMethod.GET)
-	public String memberInsertForm(Model model)
-	{
-		return "MemberInsertForm";
-	}
-
 	@RequestMapping(value = "grouplist.action", method = RequestMethod.GET)
 	public String groupList(Model model)
 	{
@@ -52,12 +46,6 @@ public class YourController
 		return "PaneltyAnnounce";
 	}
 
-	@RequestMapping(value = "group.action", method = RequestMethod.GET)
-	public String group(Model model)
-	{
-		return "Group";
-	}
-
 	@RequestMapping(value = "personal.action", method = RequestMethod.GET)
 	public String personal(Model model)
 	{
@@ -75,12 +63,7 @@ public class YourController
 	{
 		return "FindPw";
 	}
-
-	@RequestMapping(value = "momentoperform.action", method = RequestMethod.GET)
-	public String momentOperForm(Model model)
-	{
-		return "MomentOperForm";
-	}
+	
 
 	@RequestMapping(value = "momentoper.action", method = RequestMethod.GET)
 	public String momentOper(Model model)

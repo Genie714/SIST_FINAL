@@ -39,65 +39,29 @@
 			$("#my_id").change(function()
 			{
 				$("#idError1").css("display", "none");
-				$("#idError2").css("display", "inline");
+				$("#idError2").css("display", "none");
 				$("#idError3").css("display", "none");
+				
+				var my_id = $("#my_id").val();
+				
+				if (my_id)
+				{
+					
+				}
+				
+				if (my_id.length < 6)
+				{
+					$("#idError2").css("display", "inline");
+					return;
+				}
 			});
 			
 			$(".btn-success").click(function()
 			{
-				if (parseInt($("#minNum").val()) < 2)
-				{
-					alert("최소 인원은 2명 이상이어야 합니다.");
-					$("#minNum").focus();
-					return false;
-				}
-				
-				if (parseInt($("#maxNum").val()) > parseInt($("#countMember").val()))
-				{
-					alert("최대 인원은 그룹원 수보다 많을 수 없습니다.");
-					$("#maxNum").focus();
-					return false;
-				}
-				
-				if (parseInt($("#minNum").val()) > parseInt($("#maxNum").val()))
-				{
-					alert("최소 인원은 최대 인원보다 많을 수 없습니다.");
-					$("#minNum").focus();
-					return false;
-				}
-				
-				if ($("#date_id").val() == "")
-				{
-					alert("추가 버튼을 눌러 일시를 추가해주세요.");
-					$("#year").focus();
-					return false;
-				}
-				
-				if ($("#place_id").val() == "")
-				{
-					alert("추가 버튼을 눌러 장소를 추가해주세요.");
-					$("#place").focus();
-					return false;
-				}
-				
+								
 			});
 			
 		});
-		/* 
-		function idCheck()
-		{
-			//alert("확인");
-			
-			$("#idError1").css("display", "none");
-			$("#idError2").css("display", "inline");
-			$("#idError3").css("display", "none");
-			
-			var my_id = $("#my_id").val();
-			if ()
-			{
-				
-			}
-		} */
 		
 
 </script>
@@ -181,13 +145,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;">
-								<span id="pwError1" style="font-size: small; color: red;">※ 8자 이상 입력해야 합니다.</span>
+							<td style="display: none;" id="pwError1">
+								<span style="font-size: small; color: red;">※ 8자 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;">
-								<span id="pwError2" style="font-size: small; color: red;">※ 사용 불가능한 문자입니다.</span>
+							<td style="display: none;" id="pwError2">
+								<span style="font-size: small; color: red;">※ 사용 불가능한 문자입니다.</span>
 							</td>
 						</tr>
 						<tr>
@@ -203,13 +167,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;">
-								<span id="nameError1" style="font-size: small; color: red;">※ 2자 이상 입력해야 합니다.</span>
+							<td style="display: none;" id="nameError1">
+								<span style="font-size: small; color: red;">※ 2자 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;">
-								<span id="nameError2" style="font-size: small; color: red;">※ 이미 존재하는 닉네임입니다.</span>
+							<td style="display: none;" id="nameError2">
+								<span style="font-size: small; color: red;">※ 이미 존재하는 닉네임입니다.</span>
 							</td>
 						</tr>
 						<tr style="height: 10px;">
