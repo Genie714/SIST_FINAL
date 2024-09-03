@@ -326,7 +326,7 @@ function isValidEngNum(str)
 }
 
 // 전화번호 형식(숫자-숫자-숫자)인지 체크
-function isValidPhone(data) 
+function isValidPhone(data)
 {
 	var format = /^(\d+)-(\d+)-(\d+)$/;
 	if (data.search(format) == -1)
