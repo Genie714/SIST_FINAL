@@ -1,5 +1,7 @@
 package com.test.prj;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,40 +12,94 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class YourController
 {
-	//@Autowired
-	//private SqlSession sqlSession;
-	
-	@RequestMapping(value = "main.action", method = RequestMethod.GET)
-	public String main(Model model)
-	{
-		return "/WEB-INF/view/Main.jsp"; 
-	}
+	@Autowired
+	private SqlSession sqlSession;
 
-	@RequestMapping(value = "loginform.action", method = RequestMethod.GET)
-	public String loginForm(Model model)
-	{
-		return "LoginForm";
-	}
-
-	@RequestMapping(value = "grouplist.action", method = RequestMethod.GET)
+	@RequestMapping(value = "/grouplist.action", method = RequestMethod.GET)
 	public String groupList(Model model)
 	{
 		String result = "";
 		
-		// 프로젝트에 없어서 주석처리했음(대진)
-		//IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
-		//model.addAttribute("count", dao.count());
-		//model.addAttribute("list", dao.list());
+		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
+		model.addAttribute("count", dao.count());
+		model.addAttribute("list", dao.list());
 		
 		result = "/WEB-INF/view/GroupList.jsp";
 		
 		return result;
 	}
-
+	
+	@RequestMapping(value = "/groupcreationform.action", method = RequestMethod.GET)
+	public String groupCreationForm(Model model)
+	{
+		String result = "";
+		
+		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
+		model.addAttribute("nextGCId", dao.nextGCId());
+		
+		result = "/WEB-INF/view/GroupCreationForm.jsp";
+		
+		
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/groupcreationList.action", method = RequestMethod.GET)
+	public String groupCreationList(Model model)
+	{
+		String result = "";
+		
+		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
+		model.addAttribute("list", dao.creationList());
+		model.addAttribute("count", dao.creationCount());
+		
+		result = "/WEB-INF/view/GroupCreationList.jsp";
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/groupcreationinsert.action", method = RequestMethod.POST)
+	public String groupCreationInsert(GroupDTO dto, Model model)
+	{
+		String result = "";
+		
+		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
+		dao.creationAdd(dto);
+		
+		result = "redirect:groupcreationList.action";
+		
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "groupsignupquestionform.action", method = RequestMethod.GET)
+	public String groupSignupQuestionForm(HttpServletRequest request, Model model)
+	{
+		String result = "";
+		
+		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
+		
+		String group_id = request.getParameter("id");
+		
+		model.addAttribute("question", dao.questionForm(group_id));
+		
+		result = "/WEB-INF/view/GroupSignupQuestionForm.jsp";
+		
+		
+		return result;
+	}
+	
+	/*
 	@RequestMapping(value = "paneltyannounce.action", method = RequestMethod.GET)
 	public String paneltyAnnounce(Model model)
 	{
 		return "PaneltyAnnounce";
+	}
+
+	@RequestMapping(value = "group.action", method = RequestMethod.GET)
+	public String group(Model model)
+	{
+		return "Group";
 	}
 
 	@RequestMapping(value = "personal.action", method = RequestMethod.GET)
@@ -64,6 +120,18 @@ public class YourController
 		return "FindPw";
 	}
 
+	@RequestMapping(value = "momentoperform.action", method = RequestMethod.GET)
+	public String momentOperForm(Model model)
+	{
+		return "MomentOperForm";
+	}
+
+	@RequestMapping(value = "momentoper.action", method = RequestMethod.GET)
+	public String momentOper(Model model)
+	{
+		return "MomentOper";
+	}
+
 	@RequestMapping(value = "momentbuild.action", method = RequestMethod.GET)
 	public String momentBuild(Model model)
 	{
@@ -82,11 +150,6 @@ public class YourController
 		return "GroupSignupQuestionUpdate";
 	}
 
-	@RequestMapping(value = "groupsignupquestionform.action", method = RequestMethod.GET)
-	public String groupSignupQuestionForm(Model model)
-	{
-		return "GroupSignupQuestionForm";
-	}
 
 	@RequestMapping(value = "groupsignupcheck.action", method = RequestMethod.GET)
 	public String groupSignupCheck(Model model)
@@ -100,11 +163,6 @@ public class YourController
 		return "GroupSignupCheckProposer";
 	}
 
-	@RequestMapping(value = "groupcreationform.action", method = RequestMethod.GET)
-	public String groupCreationForm(Model model)
-	{
-		return "GroupCreationForm";
-	}
 
 	@RequestMapping(value = "groupinvitee.action", method = RequestMethod.GET)
 	public String groupInvitee(Model model)
@@ -249,25 +307,11 @@ public class YourController
 	{
 		return "ComplaintInsert";
 	}
-	
-	@RequestMapping(value = "complaintinsertform.action", method = RequestMethod.GET)
-	public String complaintInsertForm(Model model)
-	{
-		return "/WEB-INF/view/ComplaintInsertForm.jsp";
-	}
 
 	@RequestMapping(value = "alarm.action", method = RequestMethod.GET)
 	public String alarm(Model model)
 	{
 		return "Alarm";
 	}
-	
-	//테스트용 삭제 예정
-	@RequestMapping(value = "complainttest.action", method = RequestMethod.GET)
-	public String complaintTest(Model model)
-	{
-		return "/WEB-INF/view/ComplainTest.jsp";
-	}
-	
-	
+	*/
 }

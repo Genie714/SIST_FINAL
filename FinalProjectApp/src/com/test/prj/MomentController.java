@@ -5,6 +5,7 @@
 package com.test.prj;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,10 +124,10 @@ public class MomentController
 	
 	
 	@RequestMapping(value = "/momentinsert.action", method = RequestMethod.POST)
-	public String momentInsert(MomentDTO dto, String user_id, String group_id)
+	public String momentInsert(MomentDTO dto, String group_id, HttpSession session)
 	{
 		String result = null;
-		user_id = "US01";
+		String user_id = (String)session.getAttribute("user_id");
 		group_id = "GR01";
 		String phase_id = "MH01";
 		
@@ -144,17 +145,17 @@ public class MomentController
 		
 		dao.addMoment(dto);
 		dao.addMomentMember(dto);
-		
+		System.out.println(user_id);
 		result = "redirect:group.action";
 		
 		return result;
 	}
 	
 	@RequestMapping("/momentoper.action")
-	public String momentOper(Model model, String user_id, String moment_id)
+	public String momentOper(Model model, String moment_id, HttpSession session)
 	{
 		String result = null;
-		user_id = "US01";
+		String user_id = (String)session.getAttribute("user_id");
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -181,10 +182,10 @@ public class MomentController
 	}
 	
 	@RequestMapping(value = "/momentoperjoin.action", method = RequestMethod.POST)
-	public String momentOperJoin(MomentDTO dto, String user_id, String group_id)
+	public String momentOperJoin(MomentDTO dto, String group_id, HttpSession session)
 	{
 		String result = null;
-		user_id = "US01";
+		String user_id = (String)session.getAttribute("user_id");
 		group_id = "GR01";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
