@@ -29,12 +29,27 @@
 
 		$(document).ready(function()
 		{
-			
 			$(".btn-success").click(function()
 			{
-				if (confirm("해당 모먼트에 참여하시겠습니까?"))
+				if (parseInt($("#max_participant").val()) <= parseInt($("#parti_num").val()))
 				{
-					$("#myForm").submit();
+					alert("이미 최대인원이 채워졌습니다. 참여가 불가능합니다.");
+					return;
+				}
+				
+				if ($(this).val() < 1)
+				{
+					if (confirm("해당 모먼트에 참여하시겠습니까?"))
+					{
+						$("#myForm").submit();
+					}
+				}
+				else
+				{
+					if (confirm("해당 모먼트의 참여를 취소하시겠습니까?"))
+					{
+						location.href = "momentopercancel.action?moment_id=" + $("#moment_id").val();
+					}
 				}
 			});
 			
@@ -82,9 +97,10 @@
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
 					모먼트 오퍼 조회
 				<p></p>
-				<p style="font-size: small; color: blue;">▷ 현재 ${dto.parti_num }명이 참여 중인 오퍼입니다.<br>
+				<p style="font-size: small; color: blue;">▷ 현재 ${dto.parti_num }명이 참여 중인 모먼트입니다.<br>
 				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 계획 마감 일시 : ${dto.plan_end_date}</b>
 				</p>
+				<input type="hidden" id="parti_num" value="${dto.parti_num }">
 				</span>
 			</div>
 			
@@ -107,28 +123,13 @@
 								</div>
 							</td>
 						</tr>
-						
 						<tr style="height: 10px;">
 						</tr>
+						
 						<tr>
 							<td>
 								<div class="input-group" role="group">
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px; font-weight: bold;">
-										단계
-									</span>
-									<input type="text" id="phase" name="phase" class="form-control" readonly="readonly"
-									value="${dto.phase }" style="width: 1000px;">
-								</div>
-							</td>
-						</tr>
-						
-						<tr style="height: 10px;">
-						</tr>
-						
-						<tr>
-							<td>
-								<div class="input-group" role="group">
-									<span class="input-group-addon" id="basic-addon2" style="width: 100px;">
 										일시
 									</span>
 									<input type="text" id="date_name" name="date_name" class="form-control" readonly="readonly"
@@ -204,9 +205,11 @@
 						
 						<tr>
 							<td style="text-align: center;">
-								<button type="button" class="btn btn-success" ${countJoin > 0 ? "disabled='disabled'" : "" }>참여</button>
-								<button type="reset" class="btn btn-default">목록으로</button>
+								<button type="button" class="btn btn-success" value="${countJoin }">
+								${countJoin > 0 ? "참여 취소" : "참여" }</button>
+								<button type="button" class="btn btn-default">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${dto.moment_id }">
+								<input type="hidden" id="phase" name="phase" class="form-control" value="${dto.phase }">
 							</td>
 						</tr>
 					</table>

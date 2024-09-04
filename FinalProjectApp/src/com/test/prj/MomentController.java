@@ -25,6 +25,7 @@ public class MomentController
 	// 이때, 전송 방식은 폼을 이용한 submit 액션인 경우만 POST
 	// 나머지 전송 방식은 GET으로 처리한다.
 	
+	// 모먼트 조회
 	@RequestMapping("/group.action")
 	public String momentList(Model model, String group_id)
 	{
@@ -41,6 +42,7 @@ public class MomentController
 		return result;
 	}
 	
+	// 오퍼
 	@RequestMapping("/momentoperform.action")
 	public String MomentOperForm(Model model, String group_id)
 	{
@@ -196,7 +198,67 @@ public class MomentController
 		
 		dao.addMomentMember(dto);
 		
+		MomentDTO dto2 = dao.momentList(dto.getMoment_id());
+		
+		int countParti = dto2.getParti_num();
+		int countMin = dto2.getMin_participant();
+		
+		if (countParti >= countMin)
+		{
+			String phase_id = "MH02";
+			dao.modifyPhase(dto.getMoment_id(), phase_id);
+		}
+		
 		result = "redirect:group.action";
+		
+		return result;
+	}
+	
+	@RequestMapping("/momentopercancel.action")
+	public String momentOperCancel(String group_id, String moment_id, HttpSession session)
+	{
+		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
+		group_id = "GR01";
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		String member_id = dao.searchMemberId(user_id, group_id);
+		String participant_id = dao.getPartiId(member_id, moment_id);
+		
+		dao.cancelMoment(participant_id);
+		
+		result = "redirect:group.action";
+		
+		return result;
+	}
+	
+	// 빌드
+	@RequestMapping("/momentbuild.action")
+	public String momentBuild(Model model, String moment_id, HttpSession session)
+	{
+		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		MomentDTO dto = dao.momentList(moment_id);
+		String date_name = dto.getDate_name();
+		
+		if (date_name.length() >= 10)
+		{
+			if (date_name.length() > 10)
+			{
+				date_name = date_name.substring(0, 10);
+			}
+			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
+		}
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
+		model.addAttribute("countSurvey", dao.surveyCount(moment_id));
+		
+		result = "/WEB-INF/view/MomentBuild.jsp";
 		
 		return result;
 	}

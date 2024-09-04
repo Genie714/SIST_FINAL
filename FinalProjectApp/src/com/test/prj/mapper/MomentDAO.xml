@@ -93,6 +93,9 @@
 		    ON US.ID = GM.USER_ID
 		WHERE MT.MOMENT_ID = #{moment_id}
 		  AND US.ID = #{user_id}
+		  AND (SELECT COUNT(*)
+               FROM MM_QUIT
+               WHERE QITER_ID = MT.ID) = 0
 	</select>
 	
 	<select id="momentDateCount" resultType="java.lang.Integer">
@@ -109,6 +112,37 @@
 		  AND MD.DAY IS NOT NULL
 		  AND TO_CHAR(TO_DATE(MD.YEAR || '-' || MD.MONTH || '-' || MD.DAY, 'YYYY-MM-DD'), 'YYYY-MM-DD')
 		      = TO_CHAR(TO_DATE(#{date_name}, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+		  AND (SELECT COUNT(*)
+               FROM MM_QUIT
+               WHERE QITER_ID = MT.ID) = 0
+	</select>
+	
+	<update id="modifyPhase">
+		UPDATE MOMENT
+		SET PHASE_ID = #{phase_id}
+		WHERE ID = #{moment_id}
+	</update>
+	
+	<select id="getPartiId" resultType="java.lang.String">
+		SELECT ID AS PARTICIPANT_ID
+		FROM MM_PARTICIPANT MT
+		WHERE MEMBER_ID = #{member_id}
+		  AND MOMENT_ID = #{moment_id}
+		  AND (SELECT COUNT(*)
+               FROM MM_QUIT
+               WHERE QITER_ID = MT.ID) = 0
+		  
+	</select>
+	
+	<insert id="cancelMoment">
+		INSERT INTO MM_QUIT(ID, QITER_ID, QUIT_DATE)
+		VALUES('MQ0' || MMQUITSEQ.NEXTVAL, #{participant_id}, SYSDATE)
+	</insert>
+	
+	<select id="surveyCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MM_SURVEY
+		WHERE MOMENT_ID = #{moment_id}
 	</select>
 
 </mapper>

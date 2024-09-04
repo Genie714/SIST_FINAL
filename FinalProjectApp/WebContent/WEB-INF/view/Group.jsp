@@ -109,9 +109,9 @@
 						<td>${moment.phase }</td>
 						<td>${moment.date_name }</td>
 						<td>${moment.place_name }</td>
-						<td>${moment.parti_num }명</td>
-						<td>${moment.min_participant }명</td>
-						<td>${moment.max_participant }명</td>
+						<td>${moment.parti_num }</td>
+						<td>${moment.min_participant }</td>
+						<td>${moment.max_participant == null ? "미정" : moment.max_participant}</td>
 						<td>${moment.plan_end_date }</td>
 						<td>
 							<button type="button" class="btn btn-success" value="${moment.moment_id }">조회</button>

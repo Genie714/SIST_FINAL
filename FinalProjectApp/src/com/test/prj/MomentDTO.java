@@ -18,7 +18,9 @@ public class MomentDTO
 	private String note;
 	
 	private int parti_num;
-	private int min_participant, max_participant;
+	private int min_participant;
+	
+	private String max_participant;
 	
 	private String member_id, member_name;
 	
@@ -34,6 +36,15 @@ public class MomentDTO
 	
 	private String user_id;
 	
+	
+	public String getMax_participant()
+	{
+		return max_participant;
+	}
+	public void setMax_participant(String max_participant)
+	{
+		this.max_participant = max_participant;
+	}
 	public String getUser_id()
 	{
 		return user_id;
@@ -241,14 +252,6 @@ public class MomentDTO
 	public void setMin_participant(int min_participant)
 	{
 		this.min_participant = min_participant;
-	}
-	public int getMax_participant()
-	{
-		return max_participant;
-	}
-	public void setMax_participant(int max_participant)
-	{
-		this.max_participant = max_participant;
 	}
 	
 	

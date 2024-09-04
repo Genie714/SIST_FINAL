@@ -53,6 +53,18 @@ public interface IMomentDAO
 	// 이중약속 확인
 	public int momentDateCount(@Param("user_id") String user_id, @Param("date_name") String date_name);
 	
+	// 단계 변경
+	public int modifyPhase(@Param("moment_id") String moment_id, @Param("phase_id") String phase_id);
+	
+	// 모먼트 참여자 아이디 찾기
+	public String getPartiId(@Param("member_id") String member_id, @Param("moment_id") String moment_id);
+	
+	// 모먼트 참여 취소 
+	public int cancelMoment(String participant_id);
+	
+	// 설문 존재하는지 확인
+	public int surveyCount(String moment_id);
+	
 	/*
 	// 모먼트 데이터 확인
 	public MomentDTO search(String moment_id);

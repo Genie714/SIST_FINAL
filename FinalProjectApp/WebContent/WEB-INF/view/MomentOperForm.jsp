@@ -264,19 +264,20 @@
 					return false;
 				}
 				
-				if (parseInt($("#max_participant").val()) > parseInt($("#countMember").val()))
+				if ($("#max_participant").val() != "" && parseInt($("#max_participant").val()) > parseInt($("#countMember").val()))
 				{
 					alert("최대 인원은 그룹원 수보다 많을 수 없습니다.");
 					$("#max_participant").focus();
 					return false;
 				}
 				
-				if (parseInt($("#min_participant").val()) > parseInt($("#max_participant").val()))
+				if ($("#max_participant").val() != "" && parseInt($("#min_participant").val()) > parseInt($("#max_participant").val()))
 				{
 					alert("최소 인원은 최대 인원보다 많을 수 없습니다.");
 					$("#min_participant").focus();
 					return false;
 				}
+				
 				
 				if ($("#date_id").val() == "")
 				{
