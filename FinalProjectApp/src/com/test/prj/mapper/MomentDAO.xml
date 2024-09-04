@@ -4,11 +4,12 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.test.prj.IMomentDAO">
 
-	<select id="list" resultType="com.test.prj.MomentDTO">
-		SELECT MOMENT_ID, GROUP_ID, GROUP_NAME, MOMENT_NAME
-         , PHASE, DATE_NAME, PLACE_NAME
+	<select id="allList" resultType="com.test.prj.MomentDTO">
+		SELECT MOMENT_ID, MOMENT_NAME, GROUP_ID, GROUP_NAME
+         , PHASE_ID, PHASE
+         , DATE_ID, DATE_NAME, PLACE_ID, PLACE_NAME
          , PARTI_NUM, MIN_PARTICIPANT, MAX_PARTICIPANT
-         , CREATION_DATE, PLAN_END_DATE
+         , CREATION_DATE, PLAN_END_DATE, NOTE
 		FROM MMVIEW
 		WHERE GROUP_ID = #{group_id}
 		ORDER BY PLAN_END_DATE
@@ -73,5 +74,41 @@
 		INSERT INTO MM_PARTICIPANT(ID, MOMENT_ID, MEMBER_ID, PARTICIPANT_DATE)
 		VALUES('MT0' || MMPARTICIPANTSEQ.NEXTVAL, #{moment_id}, #{member_id}, SYSDATE)
 	</insert>
+
+	<select id="momentList" resultType="com.test.prj.MomentDTO">
+		SELECT MOMENT_ID, MOMENT_NAME, GROUP_ID, GROUP_NAME
+         , PHASE_ID, PHASE
+         , DATE_ID, DATE_NAME, PLACE_ID, PLACE_NAME
+         , PARTI_NUM, MIN_PARTICIPANT, MAX_PARTICIPANT
+         , CREATION_DATE, PLAN_END_DATE, NOTE
+		FROM MMVIEW
+		WHERE MOMENT_ID = #{moment_id}
+	</select>
+	
+	<select id="momentJoinCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MM_PARTICIPANT MT LEFT JOIN GR_MATCH GM
+		    ON GM.ID = MT.MEMBER_ID
+		    LEFT JOIN TBL_USER US
+		    ON US.ID = GM.USER_ID
+		WHERE MT.MOMENT_ID = #{moment_id}
+		  AND US.ID = #{user_id}
+	</select>
+	
+	<select id="momentDateCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MM_DATE MD RIGHT JOIN MOMENT MM
+		    ON MD.ID = MM.DATE_ID
+		    JOIN MM_PARTICIPANT MT
+		    ON MM.ID = MT.MOMENT_ID
+		    LEFT JOIN GR_MATCH GM
+		    ON GM.ID = MT.MEMBER_ID
+		    LEFT JOIN TBL_USER US
+		    ON US.ID = GM.USER_ID
+		WHERE US.ID = #{user_id}
+		  AND MD.DAY IS NOT NULL
+		  AND TO_CHAR(TO_DATE(MD.YEAR || '-' || MD.MONTH || '-' || MD.DAY, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+		      = TO_CHAR(TO_DATE(#{date_name}, 'YYYY-MM-DD'), 'YYYY-MM-DD')
+	</select>
 
 </mapper>

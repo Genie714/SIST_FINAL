@@ -26,7 +26,8 @@ public interface IMemberDAO
 
 	// 회원정보 데이터 입력(추가)
 	public int addUserInformation(MemberDTO dto);
-
+	
+	/*
 	// 모먼트 데이터 확인
 	public MemberDTO search(String moment_id);
 	
@@ -35,4 +36,5 @@ public interface IMemberDAO
 	
 	// 모먼트 데이터 삭제
 	public int remove(String moment_id);
+	*/
 }

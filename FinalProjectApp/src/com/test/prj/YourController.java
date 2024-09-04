@@ -63,13 +63,6 @@ public class YourController
 	{
 		return "FindPw";
 	}
-	
-
-	@RequestMapping(value = "momentoper.action", method = RequestMethod.GET)
-	public String momentOper(Model model)
-	{
-		return "MomentOper";
-	}
 
 	@RequestMapping(value = "momentbuild.action", method = RequestMethod.GET)
 	public String momentBuild(Model model)

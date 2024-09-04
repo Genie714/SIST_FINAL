@@ -13,7 +13,6 @@
 <link rel="stylesheet" type="text/css" href="<%=cp %>/css/main.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -22,7 +21,22 @@
 	{
 		$(".btn-success").click(function()
 		{
-			$(location).attr("href", "momentjoinform.action?momentId=" + $(this).val());
+			var moment_id = $(this).val();
+			var className = $("#" + moment_id).attr("class");
+			
+			if (className == "MH01")
+			{
+				$(location).attr("href", "momentoper.action?moment_id=" + $(this).val());
+			}
+			else if (className == "MH02")
+			{
+				$(location).attr("href", "momentbuild.action?moment_id=" + $(this).val());
+			}
+			else if (className == "MH03")
+			{
+				$(location).attr("href", "momentinfo.action?moment_id=" + $(this).val());
+			}
+			
 		});
 		
 	});
@@ -79,18 +93,18 @@
 			<div class="panel-body">
 				<table class="table table-hover table-striped">
 					<tr class="title">
-						<th>모먼트명</th>
+						<th>모먼트 명</th>
 						<th>단계</th>
 						<th>일시</th>
 						<th>장소</th>
 						<th>현재 멤버</th>
-						<th>최소인원</th>
-						<th>최대인원</th>
-						<th>생성시간</th>
-						<th>계획마감시간</th>
+						<th>최소 인원</th>
+						<th>최대 인원</th>
+						<th>계획 마감 일시</th>
+						<th></th>
 					</tr>
 					<c:forEach var="moment" items="${list }">
-					<tr>
+					<tr id="${moment.moment_id }" class="${moment.phase_id }">
 						<td>${moment.moment_name }</td>
 						<td>${moment.phase }</td>
 						<td>${moment.date_name }</td>
@@ -98,10 +112,9 @@
 						<td>${moment.parti_num }명</td>
 						<td>${moment.min_participant }명</td>
 						<td>${moment.max_participant }명</td>
-						<td>${moment.creation_date }</td>
 						<td>${moment.plan_end_date }</td>
 						<td>
-							<button type="button" class="btn btn-success" value="${moment.moment_id }">참여</button>
+							<button type="button" class="btn btn-success" value="${moment.moment_id }">조회</button>
 						</td>
 					</tr>
 					</c:forEach>

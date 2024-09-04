@@ -33,7 +33,7 @@ public class MomentController
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
 		model.addAttribute("count", dao.count(group_id));
-		model.addAttribute("list", dao.list(group_id));
+		model.addAttribute("list", dao.allList(group_id));
 		
 		result = "/WEB-INF/view/Group.jsp";
 		
@@ -143,6 +143,56 @@ public class MomentController
 		dto.setPhase_id(phase_id);
 		
 		dao.addMoment(dto);
+		dao.addMomentMember(dto);
+		
+		result = "redirect:group.action";
+		
+		return result;
+	}
+	
+	@RequestMapping("/momentoper.action")
+	public String momentOper(Model model, String user_id, String moment_id)
+	{
+		String result = null;
+		user_id = "US01";
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		MomentDTO dto = dao.momentList(moment_id);
+		String date_name = dto.getDate_name();
+		
+		if (date_name.length() >= 10)
+		{
+			if (date_name.length() > 10)
+			{
+				date_name = date_name.substring(0, 10);
+			}
+			//System.out.println(date_name);
+			//System.out.println(dao.momentDateCount(user_id, date_name));
+			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
+		}
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
+		
+		result = "/WEB-INF/view/MomentOper.jsp";
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/momentoperjoin.action", method = RequestMethod.POST)
+	public String momentOperJoin(MomentDTO dto, String user_id, String group_id)
+	{
+		String result = null;
+		user_id = "US01";
+		group_id = "GR01";
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		String member_id = dao.searchMemberId(user_id, group_id);
+		
+		dto.setMember_id(member_id);
+		
 		dao.addMomentMember(dto);
 		
 		result = "redirect:group.action";
