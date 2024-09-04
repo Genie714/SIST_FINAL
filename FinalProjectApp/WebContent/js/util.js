@@ -245,7 +245,7 @@ function isValidResidentNO(ssn1, ssn2)
 ============================*/
 
 // 숫자와 영문자만 입력 허용
-function onlyAlpNum() 
+function onlyAlpNum(event)
 {
 	if((event.keyCode < 48) || 
 		((event.keyCode > 57) && (event.keyCode < 65)) || 

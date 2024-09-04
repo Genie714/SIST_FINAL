@@ -7,6 +7,8 @@ package com.test.prj;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface IMomentDAO
 {
 	// 그룹 페이지에서 모먼트 리스트 확인
@@ -29,16 +31,20 @@ public interface IMomentDAO
 	
 	// 모먼트 장소 데이터 입력(추가)
 	public int addPlace(MomentDTO dto);
+
+	// 전체 모먼트 수 확인
+	public int countMoment();
 	
 	// 모먼트 데이터 입력(추가)
 	public int addMoment(MomentDTO dto);
+	
+	// 그룹원 아이디 확인
+	public String searchMemberId(@Param("user_id") String user_id, @Param("group_id") String group_id);
 
 	// 모먼트 참여자 데이터 입력(추가)
 	public int addMomentMember(MomentDTO dto);
 
-	// 모먼트 일시/장소 데이터 입력(추가)
-	public int addDatePlace(MomentDTO dto);
-	
+	/*
 	// 모먼트 데이터 확인
 	public MomentDTO search(String moment_id);
 	
@@ -47,4 +53,5 @@ public interface IMomentDAO
 	
 	// 모먼트 데이터 삭제
 	public int remove(String moment_id);
+	*/
 }

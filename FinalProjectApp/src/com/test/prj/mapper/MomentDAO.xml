@@ -46,13 +46,32 @@
 		VALUES(#{place_id}, #{place_name}, #{detail_id})
 	</insert>
 	
+	<select id="countMoment" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MOMENT
+	</select>
+	
 	<insert id="addMoment">
 		INSERT INTO MOMENT(ID, GROUP_ID, PHASE_ID, DATE_ID, PLACE_ID
 				 , CREATION_DATE, NAME
                  , MIN_PARTICIPANT, MAX_PARTICIPANT, NOTE)
-		VALUES('MM0' || MOMENTSEQ.NEXTVAL, #{group_id}, #{phase_id}, #{date_id}, #{place_id}
+		VALUES(#{moment_id}, #{group_id}, #{phase_id}, #{date_id}, #{place_id}
 			 , SYSDATE, #{moment_name}, #{min_participant}, #{max_participant}, #{note})
 	</insert>
 	
+	<select id="searchMemberId" resultType="java.lang.String">
+		SELECT GM.ID AS MEMBER_ID
+		FROM GR_MATCH GM LEFT JOIN TBL_GROUP GR
+		    ON GR.ID = GM.GROUP_ID
+		    LEFT JOIN TBL_USER US
+		    ON US.ID = GM.USER_ID
+		WHERE US.ID = #{user_id}
+		  AND GR.ID = #{group_id}
+	</select>
+	
+	<insert id="addMomentMember">
+		INSERT INTO MM_PARTICIPANT(ID, MOMENT_ID, MEMBER_ID, PARTICIPANT_DATE)
+		VALUES('MT0' || MMPARTICIPANTSEQ.NEXTVAL, #{moment_id}, #{member_id}, SYSDATE)
+	</insert>
 
 </mapper>

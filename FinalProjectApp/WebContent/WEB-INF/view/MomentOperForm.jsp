@@ -57,6 +57,9 @@
 
 		$(document).ready(function()
 		{
+			$("#error").css("display", "none");
+			$("#date_edit").css("display", "none");
+			$("#place_edit").css("display", "none");
 			var startYear = $("year").val();
 			var today = new Date();
 			var todayYear = today.getFullYear();
@@ -77,13 +80,12 @@
 				index++;
 			}
 			
+			lastday();
+			
 			$("#year").val(todayYear).attr("selected", "selected");
 			$("#month").val(todayMonth).attr("selected", "selected");
 			$("#day").val(-1).attr("selected", "selected");
 			$("#time").val(-1).attr("selected", "selected");
-			
-			lastday();
-		
 			
 			var oldDay = $("#day").val();
 			
@@ -91,9 +93,10 @@
 			{
 				if (($("#year").val() == todayYear + 2 && $("#month").val() > todayMonth)
 					|| ($("#year").val() == todayYear + 2 && $("#month").val() == todayMonth && $("#day").val() > todayDate)
-					|| ($("#year").val() == todayYear && $("#month").val() < todayMonth))
+					|| ($("#day").val() != -1 && $("#year").val() == todayYear && $("#month").val() == todayMonth && $("#day").val() <= todayDate + 2)
+					|| ($("#day").val() != -1 && $("#year").val() == todayYear && $("#month").val() < todayMonth))
 				{
-					alert("오늘로부터 2일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
+					alert("오늘로부터 3일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
 					$("#year").val(todayYear).attr("selected", "selected");
 					$("#month").val(todayMonth).attr("selected", "selected");
 					$("#day").val(oldDay).attr("selected", "selected");
@@ -106,7 +109,7 @@
 				if (($("#year").val() == todayYear + 2 && $("#month").val() > todayMonth)
 					|| ($("#year").val() == todayYear && $("#month").val() < todayMonth))
 				{
-					alert("오늘로부터 2일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
+					alert("오늘로부터 3일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
 					$("#year").val(todayYear).attr("selected", "selected");
 					$("#month").val(todayMonth).attr("selected", "selected");
 					$("#day").val(oldDay).attr("selected", "selected");
@@ -116,10 +119,10 @@
 			
 			$("#day").change(function()
 			{
-				if (($("#year").val() == todayYear + 2 && $("#month").val() == todayMonth && $("#day").val() > todayDate)
-					|| ($("#year").val() == todayYear && $("#month").val() == todayMonth && $("#day").val() <= todayDate + 2))
+				if (($("#day").val() != -1 && $("#year").val() == todayYear + 2 && $("#month").val() == todayMonth && $("#day").val() > todayDate)
+					|| ($("#day").val() != -1 && $("#year").val() == todayYear && $("#month").val() == todayMonth && $("#day").val() <= todayDate + 2))
 				{
-					alert("오늘로부터 2일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
+					alert("오늘로부터 3일 뒤 ~ 2년 이내의 날짜만 입력 가능합니다.");
 					$("#year").val(todayYear).attr("selected", "selected");
 					$("#month").val(todayMonth).attr("selected", "selected");
 					$("#day").val(oldDay).attr("selected", "selected");
@@ -154,13 +157,14 @@
 									var day = lists.find("day").text();
 									var time = lists.find("time").text();
 									
-									alert(date_id);
-									
 									$("#date_id").val(date_id);
 									$("#year").val(year).attr("selected", "selected");
 									$("#month").val(month).attr("selected", "selected");
 									$("#day").val(day).attr("selected", "selected");
 									$("#time").val(time).attr("selected", "selected");
+									
+									$("#date_submit").attr("disabled", true);
+									$("#date_edit").css("display", "inline");
 								});
 
 								
@@ -173,25 +177,35 @@
 						});
 				});
 			
+			
+			$("#date_edit").click(function()
+			{
+				$("#date_submit").attr("disabled", false);
+				$("#date_edit").css("display", "none");
+				$("#date_id").val("");
+			});
+			
+			/*
 			$(".placeSelect").click(function()
 			{
-				/* 
+				 
 				var n = "";
 				if ($(this).val() == 1)
 				{
 					n = "";
 				}
-				*/
 				
-				/* $("#placeTr").html("<td><input type='text' id='place' name='place' class='form-control' placeholder='장소' required='required'></td>" + $("#placeTr").html()); */
+				
+				$("#placeTr").html("<td><input type='text' id='place' name='place' class='form-control' placeholder='장소' required='required'></td>" + $("#placeTr").html());
 			});
+			*/
 			
 			$(".placeSubmit").click(function()
 			{
 				// 테스트
 				//alert($("#place").val());
 				
-				var params = "place_name=" + $("#place").val() + "&detail_id=" + $(".placeSelect").val();			
+				var params = "place_name=" + $("#place_name").val() + "&detail_id=" + $(".placeSelect").val();			
 				$.ajax(
 				{
 					type : "POST"
@@ -207,10 +221,13 @@
 							var place_id = lists.find("place_id").text();
 							var place_name = lists.find("place_name").text();
 							
-							alert(place_id);
-							
 							$("#place_id").val(place_id);
-							$("#place").val(place_name);
+							$("#place_name").val(place_name);
+							
+							$("#place_name").attr("readonly", true);
+							$("#place_submit").attr("disabled", true);
+							$("#place_edit").css("display", "inline");
+							
 						});
 
 					}
@@ -222,26 +239,42 @@
 				});
 			});
 			
+			$("#place_edit").click(function()
+			{
+				$("#place_name").attr("readonly", false);
+				$("#place_submit").attr("disabled", false);
+				$("#place_edit").css("display", "none");
+				$("#place_id").val("");
+				
+			});
+			
+			
 			$(".btn-success").click(function()
 			{
-				if (parseInt($("#minNum").val()) < 2)
+				if ($("#moment_name").val() == "" || $("#min_participant").val() == "")
+				{
+					$("#error").css("display", "inline");
+					return false;
+				}
+				
+				if (parseInt($("#min_participant").val()) < 2)
 				{
 					alert("최소 인원은 2명 이상이어야 합니다.");
-					$("#minNum").focus();
+					$("#min_participant").focus();
 					return false;
 				}
 				
-				if (parseInt($("#maxNum").val()) > parseInt($("#countMember").val()))
+				if (parseInt($("#max_participant").val()) > parseInt($("#countMember").val()))
 				{
 					alert("최대 인원은 그룹원 수보다 많을 수 없습니다.");
-					$("#maxNum").focus();
+					$("#max_participant").focus();
 					return false;
 				}
 				
-				if (parseInt($("#minNum").val()) > parseInt($("#maxNum").val()))
+				if (parseInt($("#min_participant").val()) > parseInt($("#max_participant").val()))
 				{
 					alert("최소 인원은 최대 인원보다 많을 수 없습니다.");
-					$("#minNum").focus();
+					$("#min_participant").focus();
 					return false;
 				}
 				
@@ -281,7 +314,7 @@
 			var dayindexLen = document.getElementById("day").length;
 			if (day > dayindexLen)
 			{
-				document.getElementById("day").innerHTML += "<option value=' " + -1 + "' selected='selected'>" + "일시를 선택하세요." + "</option>";
+				document.getElementById("day").innerHTML += "<option value='" + -1 + "' selected='selected'>" + "선택 없음" + "</option>";
 				for (var i = (dayindexLen + 1); i <= day; i++)
 				{
 					document.getElementById("day").innerHTML += "<option value=' " + i + "'>" + i + "</option>";
@@ -345,7 +378,7 @@
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px;">
 										모먼트명 <sup style="color: red;">※</sup>
 									</span>
-									<input type="text" id="name" name="name" class="form-control"
+									<input type="text" id="moment_name" name="moment_name" class="form-control"
 									placeholder="모먼트명" maxlength="30" required="required">
 									<span class="input-group-addon">30자 이내</span>
 								</div>
@@ -414,7 +447,7 @@
 										시간
 									</span>
 									<select id="time" name="time" class="form-control">
-										<option value="-1" selected="selected">시간을 선택하세요.</option>
+										<option value="-1" selected="selected">선택 없음</option>
 										<%
 										for (String i : timeArr)
 										{
@@ -430,7 +463,8 @@
 							</td>
 							<td>
 								<input type="hidden" id="date_id" name="date_id">
-								<button type="button" class="dateSubmit">추가</button>
+								<button type="button" class="dateSubmit" id="date_submit">추가</button>
+								<button type="button" class="dateEdit" id="date_edit" style="display: none;">수정</button>
 							</td>
 						</tr>
 						
@@ -449,14 +483,18 @@
 						<tr>
 							<td>
 								<input type="radio" id="abstractPlace" name="place" value="1" checked="checked" class="placeSelect">
-								<label for="abstractPlace" style="font-size: 14px;">추상적으로 등록</label>
+								<label for="abstractPlace" style="font-size: 14px;">대충 등록!</label>
 								<input type="radio" id="fullPlace" name="place" value="2" class="placeSelect">
-								<label for="fullPlace" style="font-size: 14px;">상세하게 등록</label>
+								<label for="fullPlace" style="font-size: 14px;">자세히 등록!</label>
 							</td>
 						</tr>
 						<tr id="placeTr">
-							<td><input type="text" id="place" name="place" class="form-control" placeholder="장소" required="required"></td>
-							<td><button type="button" class="placeSubmit">추가</button></td>
+							<td><input type="text" id="place_name" name="place_name" class="form-control"
+								 placeholder="장소" required="required"></td>
+							<td>
+								<button type="button" class="placeSubmit" id="place_submit">추가</button>
+								<button type="button" class="placeEdit" id="place_edit" style="display: none;">수정</button>
+							</td>
 							<td><input type="hidden" id="place_id" name="place_id"></td>
 						</tr>
 						<tr>
@@ -465,7 +503,7 @@
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px;">
 										최소 인원 <sup style="color: red;">※</sup>
 									</span>
-									<input type="text" id="minNum" name="minNum" class="form-control"
+									<input type="text" id="min_participant" name="min_participant" class="form-control"
 									placeholder="ex) 2" maxlength="30" required="required">
 									<span class="input-group-addon">최소 2명</span>
 								</div>
@@ -478,7 +516,7 @@
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px;">
 										최대 인원
 									</span>
-									<input type="text" id="maxNum" name="maxNum" class="form-control"
+									<input type="text" id="max_participant" name="max_participant" class="form-control"
 									placeholder="ex) 5" maxlength="30">
 									<span class="input-group-addon">최대 ${countMember }명</span>
 								</div>
@@ -515,7 +553,7 @@
 								<button type="reset" class="btn btn-default">취소</button>
 								<br>
 								
-								<span style="font-size: small; color: red; display: none;">
+								<span style="font-size: small; color: red; display: none;" id="error">
 									필수입력 사항을 모두 입력해야 합니다.
 								</span>
 							</td>

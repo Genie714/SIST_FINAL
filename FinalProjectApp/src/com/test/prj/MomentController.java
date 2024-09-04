@@ -4,11 +4,14 @@
 
 package com.test.prj;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class MomentController
@@ -79,19 +82,18 @@ public class MomentController
 	  
 		dao.addDate(dto);
 		
-		model.addAttribute("date_id", dto.getDate_id());
 		model.addAttribute("year", dto.getYear());
 		model.addAttribute("month", dto.getMonth());
 		model.addAttribute("day", dto.getDay());
 		model.addAttribute("time", dto.getTime());
 		
-		result = "/WEB-INF/view/MomentDateAjax.jsp";
+		result = "/WEB-INF/view/MomentDateAjax.jsp?date_id=" + dto.getDate_id();
 		
 		return result;
 	}
 	
 	@RequestMapping("/momentplaceinsert.action")
-	public String momentPlaceInsert(Model model, String place_name, String detail_id)
+	public String momentPlaceInsert(Model model, String place_name, String detail_id, HttpServletRequest request)
 	{
 		String result = null;
 		MomentDTO dto = new MomentDTO();
@@ -112,29 +114,43 @@ public class MomentController
 		
 		dao.addPlace(dto);
 		
-		model.addAttribute("place_id", dto.getPlace_id());
 		model.addAttribute("place_name", dto.getPlace_name());
 		
-		result = "/WEB-INF/view/MomentPlaceAjax.jsp";
+		result = "/WEB-INF/view/MomentPlaceAjax.jsp?place_id=" + dto.getPlace_id();
+		
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "/momentinsert.action", method = RequestMethod.POST)
+	public String momentInsert(MomentDTO dto, String user_id, String group_id)
+	{
+		String result = null;
+		user_id = "US01";
+		group_id = "GR01";
+		String phase_id = "MH01";
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		String member_id = dao.searchMemberId(user_id, group_id);
+		
+		int count = dao.countMoment();
+		String moment_id = String.format("MM0%s", count + 1);
+		
+		dto.setMoment_id(moment_id);
+		dto.setGroup_id(group_id);
+		dto.setMember_id(member_id);
+		dto.setPhase_id(phase_id);
+		
+		dao.addMoment(dto);
+		dao.addMomentMember(dto);
+		
+		result = "redirect:group.action";
 		
 		return result;
 	}
 	
 	/*
-	@RequestMapping(value = "/studentinsert.action", method = RequestMethod.POST)
-	public String studentInsert(StudentDTO s)
-	{
-		String result = null;
-		
-		IStudentDAO dao = sqlSession.getMapper(IStudentDAO.class);
-		
-		dao.add(s);
-		
-		result = "redirect:studentlist.action";
-		
-		return result;
-	}
-	
 	@RequestMapping(value = "/studentupdateform.action", method = RequestMethod.GET)
 	public String studentUpdateForm(String sid, Model model)
 	{

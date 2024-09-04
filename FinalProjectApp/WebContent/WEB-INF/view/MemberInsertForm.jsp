@@ -26,42 +26,200 @@
 
 <script type="text/javascript">
 
-		$(document).ready(function()
+	$(document).ready(function()
+	{
+		$("#nullError").css("display", "none");
+		
+		$("#birth_date").datepicker(
 		{
-			$("#birth_date").datepicker(
-			{
-				dateFormat : "yy-mm-dd"
-				, changeYear : true
-				, changeMonth : true
-				, maxDate : 0
-			});
+			dateFormat : "yy-mm-dd"
+			, changeYear : true
+			, changeMonth : true
+			, maxDate : 0
+		});
+		
+		$("#my_id").change(function()
+		{
+			$("#idError1").css("display", "none");
+			$("#idError2").css("display", "none");
+			$("#idError3").css("display", "none");
 			
-			$("#my_id").change(function()
+			var my_id = $("#my_id").val();
+			
+			var params = "my_id=" + my_id;
+			$.ajax(
 			{
-				$("#idError1").css("display", "none");
-				$("#idError2").css("display", "none");
-				$("#idError3").css("display", "none");
-				
-				var my_id = $("#my_id").val();
-				
-				if (my_id)
+				type : "POST"
+				, url : "memberidcount.action"
+				, data : params
+				, dataType : "xml"					//-- check
+				, success : function(id)
 				{
 					
+					$(id).find("lists").each(function()
+					{
+						var lists = $(this);
+						var countId = lists.find("count").text();
+						
+						if (countId != "" && parseInt(countId) > 0)
+						{
+							$("#idError1").css("display", "inline");
+							$("#my_id").focus();
+							return;
+						}
+					});
+
+				}
+				, error : function(e)
+				{
+					alert(e.responseText);
 				}
 				
-				if (my_id.length < 6)
-				{
-					$("#idError2").css("display", "inline");
-					return;
-				}
 			});
 			
-			$(".btn-success").click(function()
+			if (my_id.length < 6)
 			{
-								
+				$("#idError2").css("display", "inline");
+				$("#my_id").focus();
+				return;
+			}
+			
+			let checkNum = /[0-9]/;
+			let checkEng = /[a-zA-Z]/;
+			let checkSpc = /[~!@#$%^&*()_+|<>?:{}]/;
+			let checkKor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+			
+			var flagSpc = checkSpc.test(my_id);
+			var flagKor = checkKor.test(my_id);
+			
+			if (flagSpc || flagKor)
+			{
+				$("#idError3").css("display", "inline");
+				$("#my_id").focus();
+				return;
+			}
+		});
+		
+		$("#pw").change(function()
+		{
+			$("#pwError1").css("display", "none");
+			$("#pwError2").css("display", "none");
+			$("#pwError3").css("display", "none");
+			
+			var pw = $("#pw").val();
+			
+			if (pw.length < 8)
+			{
+				$("#pwError1").css("display", "inline");
+				$("#pw").focus();
+				return;
+			}
+			
+			let checkNum = /[0-9]/;
+			let checkEng = /[a-zA-Z]/;
+			let checkSpc = /[~!@#$%^&*()_+|<>?:{}]/;
+			let checkKor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+			
+			var flagNum = checkNum.test(pw);
+			var flagEng = checkEng.test(pw);
+			
+			if (!flagNum || !flagEng)
+			{
+				$("#pwError2").css("display", "inline");
+				$("pw").focus();
+				return;
+			}
+		});
+		
+		
+		$("#user_name").change(function()
+		{
+			$("#nameError1").css("display", "none");
+			$("#nameError2").css("display", "none");
+			
+			var user_name = $("#user_name").val();
+			
+			if (user_name.length < 2)
+			{
+				$("#nameError1").css("display", "inline");
+				$("#my_id").focus();
+				return;
+			}
+			
+			var params = "user_name=" + user_name;		
+			$.ajax(
+			{
+				type : "POST"
+				, url : "membernamecount.action"
+				, data : params
+				, dataType : "xml"					
+				, success : function(name)
+				{
+					
+					$(name).find("lists").each(function()
+					{
+						var lists = $(this);
+						var count = lists.find("count").text();
+						
+						if (parseInt(count) > 0)
+						{
+							$("#nameError2").css("display", "inline");
+							$("#user_name").focus();
+							return;
+						}
+					});
+
+				}
+				, error : function(e)
+				{
+					alert(e.responseText);
+				}
+				
 			});
+		});
+			
+		
+		$("#answer").change(function()
+		{
+			$("#answerError").css("display", "none");
+			
+			if ($("#answer").val().length < 2)
+			{
+				$("#answerError").css("display", "inline");
+				$("#answer").focus();
+				return;
+			}
 			
 		});
+		
+		$(".btn-success").click(function()
+		{
+			var flag = true;
+			
+			if ($("#my_id").val() == "" || $("#pw").val() == "" || $("#user_name").val() == ""
+			   || $("#answer").val() == "" || $("#birth_date").val() == "")
+			{
+				$("#nullError").css("display", "inline");
+				flag = false;
+			}
+			
+			if ($("#idError1").css("display") == "inline" || $("#idError2").css("display") == "inline" || $("#idError3").css("display") == "inline"
+			   || $("#pwError1").css("display") == "inline" || $("#pwError2").css("display") == "inline" 
+			   || $("#nameError1").css("display") == "inline" || $("#nameError1").css("display") == "inline"
+			   || $("#answerError").css("display") == "inline" || $("#birthDateError").css("display") == "inline")
+			{
+				flag = false;
+			}
+			
+			if (flag)
+			{
+				$("#myForm").submit();
+			}
+			
+		});
+		
+	});
+		
 		
 
 </script>
@@ -118,17 +276,17 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;"id="idError1">
+							<td style="display: none;"id="idError1" class="error">
 								<span style="font-size: small; color: red;">※ 이미 존재하는 아이디입니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="idError2" >
+							<td style="display: none;" id="idError2" class="error">
 								<span style="font-size: small; color: red;">※ 6자 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="idError3">
+							<td style="display: none;" id="idError3" class="error">
 								<span style="font-size: small; color: red;">※ 사용 불가능한 문자입니다.</span>
 							</td>
 						</tr>
@@ -145,13 +303,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="pwError1">
+							<td style="display: none;" id="pwError1" class="error">
 								<span style="font-size: small; color: red;">※ 8자 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="pwError2">
-								<span style="font-size: small; color: red;">※ 사용 불가능한 문자입니다.</span>
+							<td style="display: none;" id="pwError2" class="error">
+								<span style="font-size: small; color: red;">※ 영어, 숫자가 포함되어야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
@@ -167,12 +325,12 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="nameError1">
+							<td style="display: none;" id="nameError1" class="error">
 								<span style="font-size: small; color: red;">※ 2자 이상 입력해야 합니다.</span>
 							</td>
 						</tr>
 						<tr>
-							<td style="display: none;" id="nameError2">
+							<td style="display: none;" id="nameError2" class="error">
 								<span style="font-size: small; color: red;">※ 이미 존재하는 닉네임입니다.</span>
 							</td>
 						</tr>
@@ -189,7 +347,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" id="birth_date" name="birth_date" placeholder="생년월일">
+								<input type="text" id="birth_date" name="birth_date" placeholder="생년월일" required="required">
 							</td>
 						</tr>
 						<tr style="height: 10px;">
@@ -205,9 +363,9 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="radio" id="male" name="gender" value="1" checked="checked" class="gender">
+								<input type="radio" id="male" name="gender_id" value="GD01" checked="checked" class="gender">
 								<label for="male" style="font-size: 14px;">남성</label>
-								<input type="radio" id="female" name="gender" value="2" class="gender">
+								<input type="radio" id="female" name="gender_id" value="GD02" class="gender">
 								<label for="female" style="font-size: 14px;">여성</label>
 							</td>							
 						</tr>
@@ -222,7 +380,7 @@
 						</tr>
 						<tr>
 							<td>
-								<select id="question" name="question">
+								<select id="find_id" name="find_id">
 									<c:forEach var="find" items="${findList }">
 										<option value="${find.find_id }">
 											${find.question }
@@ -230,15 +388,23 @@
 									</c:forEach>
 								</select>
 								<input type="text" id="answer" name="answer" class="form-control"
-									placeholder="답변" maxlength="200" required="required">
+									placeholder="답변" maxlength="100" required="required">
 							</td>
 						</tr>
-						
+						<tr>
+							<td style="display: none;" id="answerError" class="error">
+								<span style="font-size: small; color: red;">※ 2자 이상 입력해야 합니다.</span>
+							</td>
+						</tr>
 						<tr>
 							<td style="text-align: center;">
-								<button type="submit" class="btn btn-success">등록</button>
+								<button type="button" class="btn btn-success">등록</button>
 								<button type="reset" class="btn btn-default">취소</button>
 								<br>
+								
+								<span id="nullError" style="font-size: small; color: red; display: none;">
+									필수입력 사항을 모두 입력해야 합니다.
+								</span>
 							</td>
 							<td></td>
 						</tr>
