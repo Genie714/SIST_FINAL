@@ -55,7 +55,7 @@
 			
 			$(".btn-default").click(function()
 			{
-				$(location).attr("href", "group.action");
+				$(location).attr("href", "group.action?group_id=" + $("#group_id").val());
 			});
 
 			
@@ -210,6 +210,7 @@
 								<button type="button" class="btn btn-default">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${dto.moment_id }">
 								<input type="hidden" id="phase" name="phase" class="form-control" value="${dto.phase }">
+								<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
 							</td>
 						</tr>
 					</table>

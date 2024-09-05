@@ -14,8 +14,14 @@ public interface IMomentDAO
 	// 그룹 페이지에서 모든 모먼트 리스트 확인
 	public ArrayList<MomentDTO> allList(String group_id);
 	
-	// 모먼트 등록 인원 수 확인
-	public int count(String group_id);
+	// 그룹 페이지에서 내가 참여 중인 모먼트 리스트 확인
+	public ArrayList<MomentDTO> myList(@Param("group_id") String group_id, @Param("member_id") String member_id);
+	
+	// 그룹 내 모든 모먼트 수 확인
+	public int allCount(String group_id);
+	
+	// 그룹 내 내가 참여 중인 모먼트 수 확인
+	public int myCount(@Param("group_id") String group_id, @Param("member_id") String member_id);
 	
 	// 그룹원 수 확인
 	public int countMember(String group_id);
@@ -70,6 +76,19 @@ public interface IMomentDAO
 	
 	// 모먼트 설문 생성
 	public int addSurvey(@Param("survey_id") String survey_id, @Param("moment_id") String moment_id, @Param("type_id") String type_id);
+	
+	// 설문코드 찾기
+	public String searchSurveyId(@Param("type_id") String type_id, @Param("moment_id") String moment_id);
+	
+	// 설문 응답 데이터 추가
+	public int addSurveyResponse(@Param("survey_id") String survey_id, @Param("participant_id") String participant_id
+			, @Param("response") String response, @Param("others") String others, @Param("impossible_date") String impossible_date);
+	
+	// 설문 응답했는지 확인
+	public int countSurveyResponseNum(@Param("survey_id") String survey_id, @Param("participant_id") String participant_id, @Param("moment_id") String moment_id);
+	
+	// 설문 응답 내용 확인
+	public MomentDTO countSurveyResponse(@Param("survey_id") String survey_id, @Param("participant_id") String participant_id, @Param("moment_id") String moment_id);
 	
 	/*
 	// 모먼트 데이터 확인

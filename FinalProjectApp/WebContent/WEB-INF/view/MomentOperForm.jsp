@@ -294,6 +294,11 @@
 				}
 				
 			});
+			
+			$(".btn-default").click(function()
+			{
+				$(location).attr("href", "group.action?group_id=" + $("#group_id").val());
+			});
 
 			
 		});
@@ -371,7 +376,7 @@
 			</div>
 			
 			<div class="panel-body">
-				<form action="momentinsert.action" method="post" id="myForm">
+				<form action="momentinsert.action?group_id=<%=request.getParameter("group_id") %>" method="post" id="myForm">
 					<table class="table">
 						<tr>
 							<td>
@@ -558,7 +563,9 @@
 									필수입력 사항을 모두 입력해야 합니다.
 								</span>
 							</td>
-							<td></td>
+							<td>
+								<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
+							</td>
 						</tr>
 					</table>
 				</form>

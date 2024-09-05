@@ -38,6 +38,32 @@ public class MomentDTO
 	
 	private String survey_id, survey_response_id, survey_type_id;
 	
+	private String impossible_date, response, others;
+	
+	public String getImpossible_date()
+	{
+		return impossible_date;
+	}
+	public void setImpossible_date(String impossible_date)
+	{
+		this.impossible_date = impossible_date;
+	}
+	public String getResponse()
+	{
+		return response;
+	}
+	public void setResponse(String response)
+	{
+		this.response = response;
+	}
+	public String getOthers()
+	{
+		return others;
+	}
+	public void setOthers(String others)
+	{
+		this.others = others;
+	}
 	public String getSurvey_id()
 	{
 		return survey_id;

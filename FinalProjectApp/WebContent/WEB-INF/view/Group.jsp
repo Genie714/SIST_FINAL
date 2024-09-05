@@ -19,6 +19,7 @@
 
 	$(document).ready(function()
 	{
+		
 		$(".btn-success").click(function()
 		{
 			var moment_id = $(this).val();
@@ -26,15 +27,15 @@
 			
 			if (className == "MH01")
 			{
-				$(location).attr("href", "momentoper.action?moment_id=" + $(this).val());
+				$(location).attr("href", "momentoper.action?moment_id=" + $(this).val() + "&group_id=" + $("#group_id").val());
 			}
 			else if (className == "MH02")
 			{
-				$(location).attr("href", "momentbuild.action?moment_id=" + $(this).val());
+				$(location).attr("href", "momentbuild.action?moment_id=" + $(this).val() + "&group_id=" + $("#group_id").val());
 			}
 			else if (className == "MH03")
 			{
-				$(location).attr("href", "momentinfo.action?moment_id=" + $(this).val());
+				$(location).attr("href", "momentinfo.action?moment_id=" + $(this).val() + "&group_id=" + $("#group_id").val());
 			}
 			
 		});
@@ -80,14 +81,14 @@
 					모먼트 출력
 				</span>
 				<span class="col-md-9">
-					<a href="momentoperform.action" role="button" class="btn btn-success btn-xs" id="btnAdd"
+					<a href="momentoperform.action?group_id=<%=request.getParameter("group_id") %>" role="button" class="btn btn-success btn-xs" id="btnAdd"
 					style="vertical-align: bottom;">모먼트 생성</a>
 				</span>
 			</div>
 			
 			<div class="panel-body">
-				전체 모먼트 수
-				<span class="badge">${count }</span>
+				내가 참여 중인 모먼트 수
+				<span class="badge">${myCount }</span>
 			</div>
 			
 			<div class="panel-body">
@@ -101,9 +102,50 @@
 						<th>최소 인원</th>
 						<th>최대 인원</th>
 						<th>계획 마감 일시</th>
-						<th></th>
+						<th>
+						</th>
 					</tr>
-					<c:forEach var="moment" items="${list }">
+					<c:forEach var="moment" items="${myList }">
+					<tr id="${moment.moment_id }" class="${moment.phase_id }">
+						<td>${moment.moment_name }</td>
+						<td>${moment.phase }</td>
+						<td>${moment.date_name }</td>
+						<td>${moment.place_name }</td>
+						<td>${moment.parti_num }</td>
+						<td>${moment.min_participant }</td>
+						<td>${moment.max_participant == null ? "미정" : moment.max_participant}</td>
+						<td>${moment.plan_end_date }</td>
+						<td>
+							<button type="button" class="btn btn-success" value="${moment.moment_id }">조회</button>
+						</td>
+					</tr>
+					</c:forEach>
+					
+					<tr style="height: 10px;">
+					</tr>
+				</table>
+				
+			<div class="panel-body">
+				전체 모먼트 수
+				<span class="badge">${allCount }</span>
+			</div>
+			
+			<div class="panel-body">
+				<table class="table table-hover table-striped">
+					<tr class="title">
+						<th>모먼트 명</th>
+						<th>단계</th>
+						<th>일시</th>
+						<th>장소</th>
+						<th>현재 멤버</th>
+						<th>최소 인원</th>
+						<th>최대 인원</th>
+						<th>계획 마감 일시</th>
+						<th>
+							<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
+						</th>
+					</tr>
+					<c:forEach var="moment" items="${allList }">
 					<tr id="${moment.moment_id }" class="${moment.phase_id }">
 						<td>${moment.moment_name }</td>
 						<td>${moment.phase }</td>

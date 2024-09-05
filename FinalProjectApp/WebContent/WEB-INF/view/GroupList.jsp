@@ -94,13 +94,13 @@
 					 	<td>${group.count }</td>
 					 	
 					 	<td>
-							<a href="groupaction?id=${group.id }" role="button" class="btn btn-success">그룹 홈</a>
+							<a href="group.action?group_id=${group.id }" role="button" class="btn btn-success">그룹 홈</a>
 					 	</td>
 					 	<td>
-							<a href="groupsignupquestionform.action?id=${group.id }" role="button" class="btn btn-success">가입</a>
+							<a href="groupsignupquestionform.action?group_id=${group.id }" role="button" class="btn btn-success">가입</a>
 					 	</td>
 					 	<td>
-							<a href="groupdelete.action?id=${group.id }" role="button" class="btn btn-danger">삭제</a>
+							<a href="groupdelete.action?group_id=${group.id }" role="button" class="btn btn-danger">삭제</a>
 					 	</td>
 					 </tr>
 					 </c:forEach>

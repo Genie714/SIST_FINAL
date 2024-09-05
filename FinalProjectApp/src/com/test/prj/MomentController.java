@@ -27,15 +27,20 @@ public class MomentController
 	
 	// 모먼트 조회
 	@RequestMapping("/group.action")
-	public String momentList(Model model, String group_id)
+	public String momentList(Model model, String group_id, HttpSession session)
 	{
 		String result = null;
-		group_id = "GR01";
+		String user_id = (String)session.getAttribute("user_id");
+		
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		model.addAttribute("count", dao.count(group_id));
-		model.addAttribute("list", dao.allList(group_id));
+		String member_id = dao.searchMemberId(user_id, group_id);
+				
+		model.addAttribute("allCount", dao.allCount(group_id));
+		model.addAttribute("allList", dao.allList(group_id));
+		model.addAttribute("myList", dao.myList(group_id, member_id));
+		model.addAttribute("myCount", dao.myCount(group_id, member_id));
 		
 		result = "/WEB-INF/view/Group.jsp";
 		
@@ -47,7 +52,6 @@ public class MomentController
 	public String MomentOperForm(Model model, String group_id)
 	{
 		String result = null;
-		group_id = "GR01";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -130,7 +134,6 @@ public class MomentController
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
-		group_id = "GR01";
 		String phase_id = "MH01";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
@@ -148,13 +151,13 @@ public class MomentController
 		dao.addMoment(dto);
 		dao.addMomentMember(dto);
 		System.out.println(user_id);
-		result = "redirect:group.action";
+		result = "redirect:group.action?group_id=" + group_id;
 		
 		return result;
 	}
 	
 	@RequestMapping("/momentoper.action")
-	public String momentOper(Model model, String moment_id, HttpSession session)
+	public String momentOper(Model model, String group_id, String moment_id, HttpSession session)
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
@@ -188,7 +191,6 @@ public class MomentController
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
-		group_id = "GR01";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -209,7 +211,7 @@ public class MomentController
 			dao.modifyPhase(dto.getMoment_id(), phase_id);
 		}
 		
-		result = "redirect:group.action";
+		result = "redirect:group.action?group_id=" + group_id;
 		
 		return result;
 	}
@@ -219,7 +221,6 @@ public class MomentController
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
-		group_id = "GR01";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -228,20 +229,20 @@ public class MomentController
 		
 		dao.cancelMoment(participant_id);
 		
-		result = "redirect:group.action";
+		result = "redirect:group.action?group_id=" + group_id;
 		
 		return result;
 	}
 	
 	// 빌드
 	@RequestMapping("/momentbuild.action")
-	public String momentBuild(Model model, String moment_id, HttpSession session)
+	public String momentBuild(Model model, String moment_id, String group_id, HttpSession session)
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
 		
+		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
-		//int countResponse = dao.countSurveyResponseNum(survey_id, user_id);
 		
 		MomentDTO dto = dao.momentList(moment_id);
 		String date_name = dto.getDate_name();
@@ -255,12 +256,26 @@ public class MomentController
 			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		}
 		
-		String type_id = "ST0";
+		String type_id = "";
 		int[] typeCount = new int[6];
 		
 		for (int i = 1; i <= 6; i++)
 		{
-			typeCount[i - 1] = dao.surveyCount(moment_id, type_id + i);
+			type_id = "ST0";
+			type_id = type_id + i;
+			typeCount[i - 1] = dao.surveyCount(moment_id, type_id);
+			if (dao.surveyCount(moment_id, type_id) > 0)
+			{
+				String survey_id = dao.searchSurveyId(type_id, moment_id);
+				String member_id = dao.searchMemberId(user_id, group_id);
+				String participant_id = dao.getPartiId(member_id, moment_id);
+				
+				int countResponseNum = dao.countSurveyResponseNum(survey_id, participant_id, moment_id);
+				model.addAttribute("countResponseNum" + i, countResponseNum);
+
+				MomentDTO countResponse = dao.countSurveyResponse(survey_id, participant_id, moment_id);
+				model.addAttribute("countResponse" + i, countResponse);
+			}
 		}
 		
 		model.addAttribute("dto", dto);
@@ -273,7 +288,7 @@ public class MomentController
 	}
 	
 	@RequestMapping("/momentsurveyinsert.action")
-	public String momentSurveyInsert(Model model, String type_id, String moment_id, HttpSession session)
+	public String momentSurveyInsert(Model model, String type_id, String moment_id, String group_id, HttpSession session)
 	{
 		String result = null;
 		
@@ -285,23 +300,30 @@ public class MomentController
 		
 		dao.addSurvey(survey_id, moment_id, type_id);
 		
-		result = "redirect:momentbuild.action?moment_id=" + moment_id;
+		result = "redirect:momentbuild.action?moment_id=" + moment_id + "&group_id=" + group_id;
 		
 		return result;
 	}
 	
-	@RequestMapping("/momentnamesurveyresponseinsert.action")
-	public String momentNameSurveyResponseInsert(Model model, String survey_id, String moment_id, HttpSession session)
+	
+	@RequestMapping("/momentsurveyresponseinsert.action")
+	public String momentSurveyResponseInsert(Model model, String moment_id, String group_id, String type_id, String response, String others, String impossible_date, HttpSession session)
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		//dao.addSurveyResponse(survey_id, moment_id);
+		String survey_id = dao.searchSurveyId(type_id, moment_id);
+		String member_id = dao.searchMemberId(user_id, group_id);
+		String participant_id = dao.getPartiId(member_id, moment_id);
 		
-		model.addAttribute("moment_name_survey_id", survey_id);
-		result = "redirect:momentbuild.action?moment_id=" + moment_id;
+		if (type_id == "ST02" && response.equals("-1"))
+			response = null;
+		
+		dao.addSurveyResponse(survey_id, participant_id, response, others, impossible_date);
+		
+		result = "redirect:momentbuild.action?moment_id=" + moment_id  + "&group_id=" + group_id;
 		
 		return result;
 	}
