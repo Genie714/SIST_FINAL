@@ -241,6 +241,7 @@ public class MomentController
 		String user_id = (String)session.getAttribute("user_id");
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		//int countResponse = dao.countSurveyResponseNum(survey_id, user_id);
 		
 		MomentDTO dto = dao.momentList(moment_id);
 		String date_name = dto.getDate_name();
@@ -254,14 +255,57 @@ public class MomentController
 			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		}
 		
+		String type_id = "ST0";
+		int[] typeCount = new int[6];
+		
+		for (int i = 1; i <= 6; i++)
+		{
+			typeCount[i - 1] = dao.surveyCount(moment_id, type_id + i);
+		}
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
-		model.addAttribute("countSurvey", dao.surveyCount(moment_id));
+		model.addAttribute("countSurvey", typeCount);
 		
 		result = "/WEB-INF/view/MomentBuild.jsp";
 		
 		return result;
 	}
+	
+	@RequestMapping("/momentsurveyinsert.action")
+	public String momentSurveyInsert(Model model, String type_id, String moment_id, HttpSession session)
+	{
+		String result = null;
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+
+		int count = dao.countSurveyNum();
+		
+		String survey_id = String.format("MS0%s", count + 1);
+		
+		dao.addSurvey(survey_id, moment_id, type_id);
+		
+		result = "redirect:momentbuild.action?moment_id=" + moment_id;
+		
+		return result;
+	}
+	
+	@RequestMapping("/momentnamesurveyresponseinsert.action")
+	public String momentNameSurveyResponseInsert(Model model, String survey_id, String moment_id, HttpSession session)
+	{
+		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
+		
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		//dao.addSurveyResponse(survey_id, moment_id);
+		
+		model.addAttribute("moment_name_survey_id", survey_id);
+		result = "redirect:momentbuild.action?moment_id=" + moment_id;
+		
+		return result;
+	}
+	
 	
 	/*
 	@RequestMapping(value = "/studentupdateform.action", method = RequestMethod.GET)

@@ -98,7 +98,7 @@
 					모먼트 오퍼 조회
 				<p></p>
 				<p style="font-size: small; color: blue;">▷ 현재 ${dto.parti_num }명이 참여 중인 모먼트입니다.<br>
-				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 계획 마감 일시 : ${dto.plan_end_date}</b>
+				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 오퍼 마감 : ${dto.plan_end_date}</b>
 				</p>
 				<input type="hidden" id="parti_num" value="${dto.parti_num }">
 				</span>

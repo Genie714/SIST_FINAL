@@ -131,7 +131,6 @@
 		  AND (SELECT COUNT(*)
                FROM MM_QUIT
                WHERE QITER_ID = MT.ID) = 0
-		  
 	</select>
 	
 	<insert id="cancelMoment">
@@ -143,6 +142,17 @@
 		SELECT COUNT(*) AS COUNT
 		FROM MM_SURVEY
 		WHERE MOMENT_ID = #{moment_id}
+		  AND TYPE_ID = #{type_id}
 	</select>
+	
+	<select id="countSurveyNum" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MM_SURVEY
+	</select>
+
+	<insert id="addSurvey">
+		INSERT INTO MM_SURVEY(ID, MOMENT_ID, TYPE_ID, PRE_SURVEY_ID, RESURVEY_MEMBER_ID)
+		VALUES(#{survey_id}, #{moment_id}, #{type_id}, NULL, NULL)
+	</insert>
 
 </mapper>

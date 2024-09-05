@@ -42,10 +42,46 @@
 				$(".btn-info").css("display", "none");
 			}
 			
-			if ($("#countSurvey").val() > 0)
+			if ($("#moment_name_survey_id").val() > 0)
 			{
+				$("#cr_moment_name").css("display", "none");
 				result = createMoment_nameSurvey();
 				document.getElementById("result_moment_name").innerHTML = result;
+			}
+			
+			if ($("#date_name_survey_id").val() > 0)
+			{
+				$("#cr_date_name").css("display", "none");
+				result = createDate_nameSurvey();
+				document.getElementById("result_date_name").innerHTML = result;
+			}
+			
+			if ($("#place_name_survey_id").val() > 0)
+			{
+				$("#cr_place_name").css("display", "none");
+				result = createPlace_nameSurvey();
+				document.getElementById("result_place_name").innerHTML = result;
+			}
+			
+			if ($("#min_participant_survey_id").val() > 0)
+			{
+				$("#cr_min_participant").css("display", "none");
+				result = createMin_participantSurvey();
+				document.getElementById("result_min_participant").innerHTML = result;
+			}
+			
+			if ($("#max_participant_survey_id").val() > 0)
+			{
+				$("#cr_max_participant").css("display", "none");
+				result = createMax_participantSurvey();
+				document.getElementById("result_max_participant").innerHTML = result;
+			}
+			
+			if ($("#note_survey_id").val() > 0)
+			{
+				$("#cr_note").css("display", "none");
+				result = createNoteSurvey();
+				document.getElementById("result_note").innerHTML = result;
 			}
 			
 			$(".btn-success").click(function()
@@ -78,10 +114,10 @@
 				{
 					result = createMoment_nameSurvey();
 					document.getElementById("result_moment_name").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
 			});
 			
@@ -91,10 +127,10 @@
 				{
 					result = createDate_nameSurvey();
 					document.getElementById("result_date_name").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
 			});
 			
@@ -104,10 +140,10 @@
 				{
 					result = createPlace_nameSurvey();
 					document.getElementById("result_place_name").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
 			});
 			
@@ -117,11 +153,12 @@
 				{
 					result = createMin_participantSurvey();
 					document.getElementById("result_min_participant").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
+
 			});
 		
 			$("#cr_max_participant").click(function()
@@ -130,10 +167,10 @@
 				{
 					result = createMax_participantSurvey();
 					document.getElementById("result_max_participant").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
 			});
 			
@@ -143,11 +180,12 @@
 				{
 					result = createNoteSurvey();
 					document.getElementById("result_note").innerHTML = result;
+					location.href = "momentsurveyinsert.action?moment_id=" + $("#moment_id").val() + "&type_id=" + $(this).val();
 					$(this).css("display", "none");
 					
 					alert("설문이 생성되었습니다.");
-
 				}
+
 			});
 						
 			$(".btn-default").click(function()
@@ -163,7 +201,7 @@
 			result = "<td><input type='text' id='sv_moment_name' name='sv_moment_name' class='form-control'";
 			result += "placeholder='모먼트명' maxlength='30' style='width: 970px;'>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_moment_name'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -173,7 +211,7 @@
 			result = "<td><input type='text' id='sv_date_name' name='sv_date_name' class='form-control'";
 			result += "style='width: 970px;'>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_date_name'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -183,7 +221,7 @@
 			result = "<td><input type='text' id='sv_place_name' name='sv_place_name' class='form-control'";
 			result += "placeholder='장소' style='width: 970px;'>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_place_name'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -193,7 +231,7 @@
 			result = "<td><input type='text' id='sv_min_participant' name='sv_min_participant' class='form-control'";
 			result += "placeholder='ex) 2' maxlength='30' style='width: 970px;'>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_min_participant'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -203,7 +241,7 @@
 			result = "<td><input type='text' id='sv_max_participant' name='sv_max_participant' class='form-control'";
 			result += "placeholder='ex) 5' maxlength='30' style='width: 970px;'>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_max_participant'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -214,7 +252,7 @@
 			result += "placeholder='ex) 노트북 챙겨와!' maxlength='200'";
 			result += "style='text-align: left; width: 970px; resize: none;'></textarea>";
 			result += "<br><button type='button' class='btn btn-info' id='sm_note'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>"
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;'>제출</button></td>";
 			
 			return result;
 		}
@@ -251,12 +289,12 @@
 	<div class="panel-group">
 		<div class="panel panel-default">
 		
-			<div class="panel-heading" style="height: 100px;">
+			<div class="panel-heading" style="height: 120px;">
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
 					모먼트 빌드 조회
 				<p></p>
 				<p style="font-size: small; color: blue;">▷ 현재 ${dto.parti_num }명이 참여 중인 모먼트입니다.<br>
-					<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 계획 마감 일시 : ${dto.plan_end_date}</b>
+					<b style="font-size: small; color: purple;">&nbsp &nbsp &nbsp 빌드 마감 : ${dto.plan_end_date}</b>
 				</p>
 				<input type="hidden" id="parti_num" value="${dto.parti_num }">
 				</span>
@@ -278,9 +316,10 @@
 									</span>
 									<input type="text" id="moment_name" name="moment_name" class="form-control" readonly="readonly"
 									value="${dto.moment_name }" style="width: 870px;">
-									&nbsp&nbsp&nbsp 
+									&nbsp;&nbsp;&nbsp; 
 									<button type="button" class="btn btn-info" id="cr_moment_name"
-									style="font-size: 12pt; font-weight: bold; height: 35px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 35px;" value="ST01">설문 생성</button>
+									<input type="hidden" id="moment_name_survey_id" class="survey_id" value="${countSurvey[0] }">
 								</div>
 							</td>
 						</tr>
@@ -300,7 +339,8 @@
 									value="${dto.date_name }" style="width: 870px;">
 									&nbsp&nbsp&nbsp 
 									<button type="button" class="btn btn-info" id="cr_date_name"
-									style="font-size: 12pt; font-weight: bold; height: 35px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 35px;" value="ST02">설문 생성</button>
+									<input type="hidden" id="date_name_survey_id" class="survey_id" value="${countSurvey[1] }">
 								</div>
 							</td>
 						</tr>
@@ -320,7 +360,8 @@
 									value="${dto.place_name }" style="width: 870px;">
 									&nbsp&nbsp&nbsp 
 									<button type="button" class="btn btn-info" id="cr_place_name"
-									style="font-size: 12pt; font-weight: bold; height: 35px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 35px;" value="ST03">설문 생성</button>
+									<input type="hidden" id="place_name_survey_id" class="survey_id" value="${countSurvey[2] }">
 								</div>
 							</td>
 						</tr>
@@ -340,7 +381,8 @@
 									value="${dto.min_participant }" style="width: 870px;">
 									&nbsp&nbsp&nbsp 
 									<button type="button" class="btn btn-info" id="cr_min_participant"
-									style="font-size: 12pt; font-weight: bold; height: 35px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 35px;" value="ST04">설문 생성</button>
+									<input type="hidden" id="min_participant_survey_id" class="survey_id" value="${countSurvey[3] }">
 								</div>
 							</td>
 						</tr>
@@ -360,7 +402,8 @@
 									value="${dto.max_participant }" style="width: 870px;">
 									&nbsp&nbsp&nbsp 
 									<button type="button" class="btn btn-info" id="cr_max_participant"
-									style="font-size: 12pt; font-weight: bold; height: 35px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 35px;" value="ST05">설문 생성</button>
+									<input type="hidden" id="max_participant_survey_id" class="survey_id" value="${countSurvey[4] }">
 								</div>
 							</td>
 						</tr>
@@ -381,7 +424,8 @@
 									${dto.note }
 									</textarea>&nbsp&nbsp&nbsp 
 									<button type="button" class="btn btn-info" id="cr_note"
-									style="font-size: 12pt; font-weight: bold; height: 216px;">설문 생성</button>
+									style="font-size: 12pt; font-weight: bold; height: 216px;" value="ST06">설문 생성</button>
+									<input type="hidden" id="note_survey_id" class="survey_id" value="${countSurvey[5] }">
 								</div>
 							</td>
 						</tr>
@@ -397,8 +441,7 @@
 								${countJoin > 0 ? "참여 취소" : "참여" }</button>
 								<button type="button" class="btn btn-default">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${dto.moment_id }">
-								<input type="hidden" id="phase" name="phase" class="form-control" value="${dto.phase }">
-								<input type="hidden" id="countSurvey" name="countSurvey" class="form-control" value="${countSurvey }">
+								<input type="hidden" id="phase" name="phase" value="${dto.phase }">
 							</td>
 						</tr>
 					</table>

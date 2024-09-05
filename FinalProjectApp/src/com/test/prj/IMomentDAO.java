@@ -62,8 +62,14 @@ public interface IMomentDAO
 	// 모먼트 참여 취소 
 	public int cancelMoment(String participant_id);
 	
-	// 설문 존재하는지 확인
-	public int surveyCount(String moment_id);
+	// 각각 설문 존재하는지 확인
+	public int surveyCount(@Param("moment_id") String moment_id, @Param("type_id") String type_id);
+	
+	// 설문 전체 개수 확인
+	public int countSurveyNum();
+	
+	// 모먼트 설문 생성
+	public int addSurvey(@Param("survey_id") String survey_id, @Param("moment_id") String moment_id, @Param("type_id") String type_id);
 	
 	/*
 	// 모먼트 데이터 확인

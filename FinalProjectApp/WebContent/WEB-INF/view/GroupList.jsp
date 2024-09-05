@@ -79,6 +79,7 @@
 						<th>아이콘</th>
 						<th>개설 일자</th>
 						<th>그룹원 수</th>
+						<th>그룹 홈</th>
 						<th>가입</th>
 						<th>관리</th>
 					</tr>
@@ -92,6 +93,9 @@
 					 	<td>${group.open_date }</td>
 					 	<td>${group.count }</td>
 					 	
+					 	<td>
+							<a href="groupaction?id=${group.id }" role="button" class="btn btn-success">그룹 홈</a>
+					 	</td>
 					 	<td>
 							<a href="groupsignupquestionform.action?id=${group.id }" role="button" class="btn btn-success">가입</a>
 					 	</td>

@@ -36,7 +36,32 @@ public class MomentDTO
 	
 	private String user_id;
 	
+	private String survey_id, survey_response_id, survey_type_id;
 	
+	public String getSurvey_id()
+	{
+		return survey_id;
+	}
+	public void setSurvey_id(String survey_id)
+	{
+		this.survey_id = survey_id;
+	}
+	public String getSurvey_response_id()
+	{
+		return survey_response_id;
+	}
+	public void setSurvey_response_id(String survey_response_id)
+	{
+		this.survey_response_id = survey_response_id;
+	}
+	public String getSurvey_type_id()
+	{
+		return survey_type_id;
+	}
+	public void setSurvey_type_id(String survey_type_id)
+	{
+		this.survey_type_id = survey_type_id;
+	}
 	public String getMax_participant()
 	{
 		return max_participant;
