@@ -1,10 +1,85 @@
 package com.test.prj;
 
+import java.util.UUID;
+
 public class GroupDTO
 {
 
 	private String id, creation_id, open_date, name, introduction, root, count, user_id
-				 , creation_date, group_id, content;
+				 , creation_date, group_id, content, type_id, match_id, signup_id, answer_id, question_id;
+	
+	private String[] answers;
+	private String[] questionIds;
+
+	public String[] getQuestionIds()
+	{
+		return questionIds;
+	}
+
+	public void setQuestionIds(String[] questionIds)
+	{
+		this.questionIds = questionIds;
+	}
+
+	public String getAnswer_id()
+	{
+		return answer_id;
+	}
+
+	public void setAnswer_id(String answer_id)
+	{
+		this.answer_id = answer_id;
+	}
+
+	public String[] getAnswers()
+	{
+		return answers;
+	}
+
+	public void setAnswers(String[] answers)
+	{
+		this.answers = answers;
+	}
+
+	public String getQuestion_id()
+	{
+		return question_id;
+	}
+
+	public void setQuestion_id(String question_id)
+	{
+		this.question_id = question_id;
+	}
+
+	public String getMatch_id()
+	{
+		return match_id;
+	}
+
+	public void setMatch_id(String match_id)
+	{
+		this.match_id = match_id;
+	}
+
+	public String getSignup_id()
+	{
+		return signup_id;
+	}
+
+	public void setSignup_id(String signup_id)
+	{
+		this.signup_id = signup_id;
+	}
+
+	public String getType_id()
+	{
+		return type_id;
+	}
+
+	public void setType_id(String type_id)
+	{
+		this.type_id = type_id;
+	}
 
 	public String getContent()
 	{
@@ -115,5 +190,16 @@ public class GroupDTO
 	{
 		this.user_id = user_id;
 	}
+	
+	public void generateUniqueId()
+	{
+		// this.id = UUID.randomUUID().toString();
 
+		UUID uuid = UUID.randomUUID();
+		this.answer_id = uuid.toString().substring(0, 8);
+	}
+
+	
+	
 }
+

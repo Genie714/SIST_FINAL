@@ -48,7 +48,7 @@
 				{
 					if (confirm("해당 모먼트의 참여를 취소하시겠습니까?"))
 					{
-						location.href = "momentopercancel.action?moment_id=" + $("#moment_id").val();
+						location.href = "momentopercancel.action?moment_id=" + $("#moment_id").val() + "&group_id=" + $("#group_id").val();
 					}
 				}
 			});
@@ -110,7 +110,7 @@
 			</div>
 			
 			<div class="panel-body">
-				<form action="momentoperjoin.action" method="post" id="myForm">
+				<form action="momentoperjoin.action?group_id=<%=request.getParameter("group_id") %>" method="post" id="myForm">
 					<table class="table">
 						<tr>
 							<td>

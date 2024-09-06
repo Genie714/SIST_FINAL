@@ -1,3 +1,7 @@
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="com.test.prj.GroupDTO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
@@ -7,7 +11,6 @@
 <%
 	String group_id = request.getParameter("id");
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,8 +20,10 @@
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 
-<script type="text/javascript" src="http://code.jquery.com/jquery.min.js">
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
 </head>
 <body>
 
@@ -69,22 +74,47 @@
 			</div>
 			
 			<div class="panel-body">
-				<form action="groupcreationinsert.action" method="post" id="myForm">
+				<form action="groupsignupinsert.action" method="post" id="myForm">
 					<table class="table table-striped">
-					
 						<tr>
 							<td>
 								<div class="input-group" role="group">
 									<span class="input-group-addon" id="basic-addon1">
-										신청서 번호 
+										그룹 매치 번호 
 									</span>
-									<input type="text" id="group_id" name="group_id" class="form-control"
-									placeholder="groupId" maxlength="30" required="required" readonly="readonly" value="<%=group_id %>">
+									<input type="text" id="match_id" name="match_id" class="form-control"
+									placeholder="GM00" maxlength="30" required="required" readonly="readonly" value="${nextGMId }">
 									<span class="input-group-addon"></span>
 								</div>
 							</td>
 						</tr>
 						
+						<tr>
+							<td>
+								<div class="input-group" role="group">
+									<span class="input-group-addon" id="basic-addon1">
+										그룹 매치 유형 번호 
+									</span>
+									<input type="text" id="type_id" name="type_id" class="form-control"
+									placeholder="GJ03" maxlength="30" required="required" readonly="readonly" value="GJ03">
+									<span class="input-group-addon"></span>
+								</div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" role="group">
+									<span class="input-group-addon" id="basic-addon1">
+										그룹 가입 번호 
+									</span>
+									<input type="text" id="signup_id" name="signup_id" class="form-control"
+									placeholder="SU00" maxlength="30" required="required" readonly="readonly" value="${nextSUId }">
+									<span class="input-group-addon"></span>
+								</div>
+							</td>
+						</tr>
+					
 						<tr>
 							<td>
 								<div class="input-group" role="group">
@@ -99,6 +129,22 @@
 						</tr>
 						
 						<c:forEach var="question" items="${question }">
+						
+						<tr style="height: 10px;">
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="input-group" role="group">
+									<span class="input-group-addon" id="basic-addon1">
+										질문 번호 
+									</span>
+									<input type="text" id=${question.id } name="questionIds" class="form-control"
+									placeholder="question_id" maxlength="30" required="required" readonly="readonly" value=${question.id }>
+									<span class="input-group-addon"></span>
+								</div>
+							</td>
+						</tr>
 						<tr style="height: 10px;">
 						</tr>
 						
@@ -108,11 +154,13 @@
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px;">
 										${question.id } : ${question.content } <sup style="color: red;">※</sup>
 									</span>
-									<input type="text" id="answer" name="answer" class="form-control"
+									<input type="text" id="${question.id }" name="answers" class="form-control"
 									placeholder="ex) 좋습니다." maxlength="30" required="required">
 								</div>
+								
 							</td>
 						</tr>
+						
 						</c:forEach>
 						
 						

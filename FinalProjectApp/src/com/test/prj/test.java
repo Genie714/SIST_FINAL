@@ -1,9 +1,14 @@
 package com.test.prj;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class test
 {
 	public static void main(String[] args)
 	{
-		String test = "2024-08-09-1";
+		String doublePlan = "&doublePlan=" + 0;
+		
+		System.out.println(doublePlan.substring(12));
 	}
 }

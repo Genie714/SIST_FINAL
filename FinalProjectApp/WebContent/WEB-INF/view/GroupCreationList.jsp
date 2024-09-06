@@ -79,7 +79,8 @@
 						<th>소개글</th>
 						<th>아이콘</th>
 						<th>가개설 일자</th>
-						<th>그룹원 수</th>
+						<th>초기 그룹원 수</th>
+						<th>초대</th>
 						<th>관리</th>
 					</tr>
 					 
@@ -93,6 +94,9 @@
 					 	<td>${group.creation_date }</td>
 					 	<td>${group.count }</td>
 					 	
+					 	<td>
+							<a href="groupdele.action?sid=${group.id }" role="button" class="btn btn-success">초대(URL)</a>
+					 	</td>
 					 	<td>
 							<a href="groupdelete.action?sid=${group.id }" role="button" class="btn btn-danger">삭제</a>
 					 	</td>

@@ -2,7 +2,7 @@
  * LoginController.java
  * 로그인 관련 컨트롤러
  * 1. 로그인 처리 O
- * 2. 로그아웃 처리
+ * 2. 로그아웃 처리 o
  * 3. 회원가입 처리
  * 4. 아이디 비밀번호 찾기 처리
  */
@@ -64,14 +64,13 @@ public class LoginController
 			{
 				// 로그인 성공 → 세션 구성
 				session.setAttribute("user_id", user_id);
-				result = "/WEB-INF/view/Main.jsp";
+				result = "redirect:personal.action";
 			}
 
 		} catch (Exception e)
 		{
 			System.out.println(e.toString());
 		}
-		System.out.println(user_id);
 		return result;
 	}
 	

@@ -4,6 +4,11 @@
 
 package com.test.prj;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -27,16 +32,51 @@ public class MomentController
 	
 	// 모먼트 조회
 	@RequestMapping("/group.action")
-	public String momentList(Model model, String group_id, HttpSession session)
+	public String momentList(Model model, String group_id, HttpSession session) throws ParseException
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
-		
+		String moment_id = "";
+		String type_id = "";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		String member_id = dao.searchMemberId(user_id, group_id);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String sysdate = dateFormat.format(new java.util.Date());
+		
+		ArrayList<MomentDTO> endTimeList = dao.searchEndMoment(group_id);
+		
+		if (endTimeList != null)
+		{
+			for (MomentDTO dto : endTimeList)
+			{
+				String plan_end_date = dto.getPlan_end_date();
+				java.util.Date d1 = dateFormat.parse(plan_end_date);
+				java.util.Date d2 = dateFormat.parse(sysdate);
+				long end_time = (d1.getTime() - d2.getTime()) / 1000;
 				
+				if (end_time <= 0)
+				{
+					if (dto.getMoment_name() == null
+							|| dto.getMonth() == null || dto.getTime() == null
+							|| dto.getPlace_name()  == null
+							|| String.valueOf(dto.getMin_participant()) == null
+							|| dto.getMax_participant()  == null)
+						type_id = "NY01";
+					else if (dto.getMin_participant() > dto.getParti_num())
+						type_id = "NY02";
+					
+					// 신고받아서 지워지는 경우도 추후 추가
+					
+					moment_id = dto.getMoment_id();
+					dao.addNonactiveMoment(moment_id, type_id);
+				}
+				
+			}
+		}
+			
+		String member_id = dao.searchMemberId(user_id, group_id);
+		
 		model.addAttribute("allCount", dao.allCount(group_id));
 		model.addAttribute("allList", dao.allList(group_id));
 		model.addAttribute("myList", dao.myList(group_id, member_id));
@@ -62,9 +102,13 @@ public class MomentController
 	}
 	
 	@RequestMapping("/momentdateinsert.action")
-	public String momentDateInsert(Model model, String year, String month, String day, String time)
+	public String momentDateInsert(Model model, String year, String month, String day, String time, HttpSession session)
 	{
 		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
+		String date_name = "";
+		String doublePlan = "-1";
+		
 		MomentDTO dto = new MomentDTO();
 		
 		day = day.trim();
@@ -77,6 +121,13 @@ public class MomentController
 			time = "";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+		
+		if (!year.equals("") && !month.equals("") && !day.equals(""))
+		{
+			date_name = String.format("%s-%s-%s", year, month, day);
+			doublePlan = String.valueOf(dao.momentDateCount(user_id, date_name));
+		}
+		
 
 		int count = dao.countDate();
 		String date_id = String.format("MD0%s", count + 1);
@@ -94,7 +145,7 @@ public class MomentController
 		model.addAttribute("day", dto.getDay());
 		model.addAttribute("time", dto.getTime());
 		
-		result = "/WEB-INF/view/MomentDateAjax.jsp?date_id=" + dto.getDate_id();
+		result = "/WEB-INF/view/MomentDateAjax.jsp?date_id=" + dto.getDate_id() + "&doublePlan=" + doublePlan;
 		
 		return result;
 	}
@@ -173,8 +224,6 @@ public class MomentController
 			{
 				date_name = date_name.substring(0, 10);
 			}
-			//System.out.println(date_name);
-			//System.out.println(dao.momentDateCount(user_id, date_name));
 			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		}
 		
@@ -193,7 +242,6 @@ public class MomentController
 		String user_id = (String)session.getAttribute("user_id");
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
-		
 		String member_id = dao.searchMemberId(user_id, group_id);
 		
 		dto.setMember_id(member_id);
@@ -240,7 +288,7 @@ public class MomentController
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
-		
+		String survey_id = "";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -256,6 +304,8 @@ public class MomentController
 			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		}
 		
+		int countJoin = dao.momentJoinCount(user_id, moment_id);
+		
 		String type_id = "";
 		int[] typeCount = new int[6];
 		
@@ -264,9 +314,10 @@ public class MomentController
 			type_id = "ST0";
 			type_id = type_id + i;
 			typeCount[i - 1] = dao.surveyCount(moment_id, type_id);
+			survey_id = dao.searchSurveyId(type_id, moment_id);
+			
 			if (dao.surveyCount(moment_id, type_id) > 0)
 			{
-				String survey_id = dao.searchSurveyId(type_id, moment_id);
 				String member_id = dao.searchMemberId(user_id, group_id);
 				String participant_id = dao.getPartiId(member_id, moment_id);
 				
@@ -276,10 +327,29 @@ public class MomentController
 				MomentDTO countResponse = dao.countSurveyResponse(survey_id, participant_id, moment_id);
 				model.addAttribute("countResponse" + i, countResponse);
 			}
+			
+			ArrayList<MomentDTO> checkResponse = dao.checkSurveyComplete(moment_id, survey_id);
+			
+			if (dao.voteCount(survey_id, type_id) < 1)
+			{
+				int countAll = dao.momentJoinAllCount(moment_id);
+				
+				if (checkResponse.size() == countAll)
+				{
+					int count = dao.countVoteNum();
+					String vote_id = String.format("MV0%s", count + 1);
+					dao.addVote(vote_id, survey_id, type_id);
+					//model.addAttribute("survey_id", survey_id);
+				}
+			}
+			
+			//model.addAttribute("survey_id" + i, survey_id);
+			model.addAttribute("voteReponse" + i, checkResponse);
+			
 		}
 		
 		model.addAttribute("dto", dto);
-		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
+		model.addAttribute("countJoin", countJoin);
 		model.addAttribute("countSurvey", typeCount);
 		
 		result = "/WEB-INF/view/MomentBuild.jsp";

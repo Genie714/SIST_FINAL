@@ -383,9 +383,10 @@
 						break;
 					}
 					
+					alert("제출이 완료되었습니다.");
+					
 				}
 				
-				alert("제출이 완료되었습니다.");
 				
 			});
 						
@@ -576,6 +577,17 @@
 						<tr id="result_moment_name">
 						</tr>
 						
+						<tr id="vote_moment_name">
+							<td>
+							<h4 style='font-weight: bold;'>선택지를 투표하세요. (택 1)</h4>
+							<c:forEach var="selection" items="${voteReponse1 }">
+								<label for="${selection.survey_response_id }">${selection.response }&nbsp &nbsp &nbsp
+									<input type="radio" id="${selection.survey_response_id }" name="vote_moment_name">
+								</label><br>
+							</c:forEach>
+							</td>
+						</tr>
+						
 						<tr style="height: 10px;">
 						</tr>
 						
@@ -599,6 +611,16 @@
 							</td>
 						</tr>
 						<tr id="result_date_name">
+						</tr>
+						
+						<tr id="vote_date_name">
+							<c:forEach var="selection" items="${voteReponse2 }">
+								<td>
+									<label for="${selection.survey_response_id }">${selection.response }
+										<input type="radio" id="${selection.survey_response_id }">
+									</label>
+								</td>
+							</c:forEach>
 						</tr>
 						
 						<tr style="height: 10px;">

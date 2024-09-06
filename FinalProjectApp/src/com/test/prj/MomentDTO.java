@@ -39,7 +39,43 @@ public class MomentDTO
 	private String survey_id, survey_response_id, survey_type_id;
 	
 	private String impossible_date, response, others;
+
+	private String nonactive_type_id, nonactive_date;
+
+	private String vote_id, vote_response_id;
 	
+	public String getVote_id()
+	{
+		return vote_id;
+	}
+	public void setVote_id(String vote_id)
+	{
+		this.vote_id = vote_id;
+	}
+	public String getVote_response_id()
+	{
+		return vote_response_id;
+	}
+	public void setVote_response_id(String vote_response_id)
+	{
+		this.vote_response_id = vote_response_id;
+	}
+	public String getNonactive_type_id()
+	{
+		return nonactive_type_id;
+	}
+	public void setNonactive_type_id(String nonactive_type_id)
+	{
+		this.nonactive_type_id = nonactive_type_id;
+	}
+	public String getNonactive_date()
+	{
+		return nonactive_date;
+	}
+	public void setNonactive_date(String nonactive_date)
+	{
+		this.nonactive_date = nonactive_date;
+	}
 	public String getImpossible_date()
 	{
 		return impossible_date;
