@@ -195,27 +195,28 @@
 				$("#date_id").val("");
 			});
 			
-			/*
+			
 			$(".placeSelect").click(function()
 			{
 				 
-				var n = "";
-				if ($(this).val() == 1)
+				if ($(this).val() == 2)
 				{
-					n = "";
+					$("#juso").css("display", "inline");
+				}
+				else
+				{
+					$("#juso").css("display", "none");
 				}
 				
-				
-				$("#placeTr").html("<td><input type='text' id='place' name='place' class='form-control' placeholder='장소' required='required'></td>" + $("#placeTr").html());
 			});
-			*/
+			
 			
 			$(".placeSubmit").click(function()
 			{
 				// 테스트
 				//alert($("#place").val());
 				
-				var params = "place_name=" + $("#place_name").val() + "&detail_id=" + $(".placeSelect").val();			
+				var params = "place_name=" + $("#place_name").val() + "&detail_id=" + $("input:radio[name='place']:checked").val();
 				$.ajax(
 				{
 					type : "POST"
@@ -345,6 +346,16 @@
 			}
 		}
 		
+		function goPopup()
+		{
+			var pop = window.open("jusoPopup.jsp","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+		}
+
+
+		function jusoCallBack(roadFullAddr)
+		{
+			document.getElementById("place_name").value = roadFullAddr;
+		}
 		
 
 </script>
@@ -510,6 +521,9 @@
 								<label for="abstractPlace" style="font-size: 14px;">대충 등록!</label>
 								<input type="radio" id="fullPlace" name="place" value="2" class="placeSelect">
 								<label for="fullPlace" style="font-size: 14px;">자세히 등록!</label>
+							</td>
+							<td>
+								<button type="button" onclick="goPopup()" id="juso" style="display: none;">주소 찾기</button>
 							</td>
 						</tr>
 						<tr id="placeTr">

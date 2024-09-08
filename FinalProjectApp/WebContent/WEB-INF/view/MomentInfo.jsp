@@ -12,7 +12,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MomentOper.jsp</title>
+<title>MomentInfo.jsp</title>
 <link rel="stylesheet" type="text/css" href="<%=cp %>/css/main.css">
 <link rel="stylesheet" type="text/css" href="<%=cp %>/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -95,10 +95,10 @@
 		
 			<div class="panel-heading" style="height: 100px;">
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
-					모먼트 오퍼 조회
+					모먼트 인포 조회
 				<p></p>
 				<p style="font-size: small; color: blue;">▷ 현재 ${momentList.parti_num }명이 참여 중인 모먼트입니다.<br>
-				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 오퍼 마감 : ${momentList.plan_end_date}</b>
+				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 인포 마감 : ${momentList.plan_end_date}</b>
 				</p>
 				<div>
 					<table>

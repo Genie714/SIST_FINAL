@@ -43,7 +43,16 @@ public class MomentDTO
 	private String nonactive_type_id, nonactive_date;
 
 	private String vote_id, vote_response_id;
+	private String vote_select_id;
 	
+	public String getVote_select_id()
+	{
+		return vote_select_id;
+	}
+	public void setVote_select_id(String vote_select_id)
+	{
+		this.vote_select_id = vote_select_id;
+	}
 	public String getVote_id()
 	{
 		return vote_id;

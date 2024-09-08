@@ -25,11 +25,6 @@ public class MomentController
 	@Autowired
 	private SqlSession sqlSession;
 	
-	// 사용자의 요청 주소와 메소드를 매핑하는 과정 필요
-	// 『@RequestMapping(value = "요청주소", method = 전송방식)』
-	// 이때, 전송 방식은 폼을 이용한 submit 액션인 경우만 POST
-	// 나머지 전송 방식은 GET으로 처리한다.
-	
 	// 모먼트 조회
 	@RequestMapping("/group.action")
 	public String momentList(Model model, String group_id, HttpSession session) throws ParseException
@@ -58,18 +53,22 @@ public class MomentController
 				if (end_time <= 0)
 				{
 					if (dto.getMoment_name() == null
-							|| dto.getMonth() == null || dto.getTime() == null
+							|| dto.getDate_name().length() < 19
 							|| dto.getPlace_name()  == null
 							|| String.valueOf(dto.getMin_participant()) == null
 							|| dto.getMax_participant()  == null)
+					{
 						type_id = "NY01";
+					/*	// 임시로 주석처리
 					else if (dto.getMin_participant() > dto.getParti_num())
 						type_id = "NY02";
+					*/
 					
 					// 신고받아서 지워지는 경우도 추후 추가
 					
 					moment_id = dto.getMoment_id();
 					dao.addNonactiveMoment(moment_id, type_id);
+					}
 				}
 				
 			}
@@ -215,8 +214,9 @@ public class MomentController
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		MomentDTO dto = dao.momentList(moment_id);
-		String date_name = dto.getDate_name();
+		MomentDTO momentList = dao.momentList(moment_id);
+		ArrayList<MomentDTO> partiList = dao.getPartiName(moment_id); 
+		String date_name = momentList.getDate_name();
 		
 		if (date_name.length() >= 10)
 		{
@@ -227,7 +227,9 @@ public class MomentController
 			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		}
 		
-		model.addAttribute("dto", dto);
+		
+		model.addAttribute("momentList", momentList);
+		model.addAttribute("partiList", partiList);
 		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
 		
 		result = "/WEB-INF/view/MomentOper.jsp";
@@ -235,8 +237,8 @@ public class MomentController
 		return result;
 	}
 	
-	@RequestMapping(value = "/momentoperjoin.action", method = RequestMethod.POST)
-	public String momentOperJoin(MomentDTO dto, String group_id, HttpSession session)
+	@RequestMapping(value = "/momentjoin.action", method = RequestMethod.POST)
+	public String momentJoin(MomentDTO dto, String group_id, HttpSession session)
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
@@ -264,8 +266,8 @@ public class MomentController
 		return result;
 	}
 	
-	@RequestMapping("/momentopercancel.action")
-	public String momentOperCancel(String group_id, String moment_id, HttpSession session)
+	@RequestMapping("/momentcancel.action")
+	public String momentCancel(String group_id, String moment_id, HttpSession session)
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
@@ -289,10 +291,24 @@ public class MomentController
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
 		String survey_id = "";
+		String member_id = "";
+		String type_id = "";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
+
+		member_id = dao.searchMemberId(user_id, group_id);
 		
+		// 모먼트 요소들 완성도 확인
 		MomentDTO dto = dao.momentList(moment_id);
+		
+		if (dto.getDate_name().length() == 19 && dto.getDetail_id().equals("ML02")
+			&& dto.getMax_participant() != null
+			&& dao.checkMomentCompleteCount(moment_id) < 1)
+		{
+			model.addAttribute("infoCheck", 1);
+		}
+		
+		ArrayList<MomentDTO> partiList = dao.getPartiName(moment_id);
 		String date_name = dto.getDate_name();
 		
 		if (date_name.length() >= 10)
@@ -306,7 +322,6 @@ public class MomentController
 		
 		int countJoin = dao.momentJoinCount(user_id, moment_id);
 		
-		String type_id = "";
 		int[] typeCount = new int[6];
 		
 		for (int i = 1; i <= 6; i++)
@@ -318,7 +333,6 @@ public class MomentController
 			
 			if (dao.surveyCount(moment_id, type_id) > 0)
 			{
-				String member_id = dao.searchMemberId(user_id, group_id);
 				String participant_id = dao.getPartiId(member_id, moment_id);
 				
 				int countResponseNum = dao.countSurveyResponseNum(survey_id, participant_id, moment_id);
@@ -327,28 +341,144 @@ public class MomentController
 				MomentDTO countResponse = dao.countSurveyResponse(survey_id, participant_id, moment_id);
 				model.addAttribute("countResponse" + i, countResponse);
 			}
-			
-			ArrayList<MomentDTO> checkResponse = dao.checkSurveyComplete(moment_id, survey_id);
-			
-			if (dao.voteCount(survey_id, type_id) < 1)
-			{
-				int countAll = dao.momentJoinAllCount(moment_id);
 				
-				if (checkResponse.size() == countAll)
+			if (survey_id != null)	//-- 설문이 생성되었다면
+			{
+				ArrayList<MomentDTO> checkResponse = dao.checkSurveyComplete(moment_id, survey_id);
+				int voteCount = dao.voteCount(survey_id, type_id);
+				int countAll = dao.momentJoinAllCount(moment_id);
+				if (voteCount < 1)	//-- 투표 생성 전이라면
 				{
-					int count = dao.countVoteNum();
-					String vote_id = String.format("MV0%s", count + 1);
-					dao.addVote(vote_id, survey_id, type_id);
-					//model.addAttribute("survey_id", survey_id);
+					if (dao.checkModifySurveyComplete(survey_id) > 0)	// 아직 모먼트가 수정된 적 없고
+					{
+						if (checkResponse.size() >= countAll)	//-- 모든 응답이 null일 때도 확인해야 함
+						{
+							ArrayList<MomentDTO> checkResponseOne = dao.checkSurveyOneComplete(moment_id, survey_id);
+							
+							if (checkResponseOne.size() == 1)		// 유효한 설문이 하나라면
+							{
+								String survey_response_id = "";
+								for (MomentDTO response : checkResponseOne)
+								{
+									survey_response_id = response.getSurvey_response_id();
+								}
+								
+								switch (type_id)
+								{
+								case "ST01": dao.modifyMomentName(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;
+								case "ST02": dao.modifyDateName(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;
+								case "ST03": dao.modifyPlaceName(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;
+								case "ST04": dao.modifyMinParticipant(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;
+								case "ST05": dao.modifyMaxParticipant(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;
+								case "ST06": dao.modifyNote(survey_response_id, moment_id);
+											 dao.modifyWhetherSurvey(survey_id);
+									break;	
+								}
+								
+								model.addAttribute("check" + i, 1);
+							}
+							else
+							{
+								int count = dao.countVoteNum();
+								String vote_id = String.format("MV0%s", count + 1);
+								dao.addVote(vote_id, survey_id, type_id);
+								model.addAttribute("voteReponse" + i, checkResponse);
+							}
+						}
+					}
+					else
+					{
+						model.addAttribute("check" + i, 1);
+					}
+					
+				}
+				else	//-- 이미 투표가 존재한다면
+				{
+					String participant_id = dao.getPartiId(member_id, moment_id);
+					
+					// 로그인한 유저가 투표 참여했는지 확인
+					int voteResponseNum = dao.CountVoteResponseNum(type_id, participant_id);
+					
+					model.addAttribute("voteReponse" + i, checkResponse);
+					model.addAttribute("voteResponseNum" + i, voteResponseNum);
+					
+					// 유저가 투표 완료했다면
+					if (voteResponseNum > 0)
+					{
+						String vote_select_id = dao.getVoteResponse(participant_id, type_id);
+						model.addAttribute("voteSelectId" + i, vote_select_id);
+					}
+					
+					String vote_id = dao.getVoteId(survey_id);
+					int check = 0;
+					
+					// 아직 모먼트가 수정된 적 없고
+					if (dao.checkModifyVoteComplete(vote_id) > 0)
+					{
+						// 투표 자체가 끝났다면
+						if (dao.checkVoteComplete(vote_id) >= countAll)
+						{
+							// 1위한 값 찾아오기
+							String survey_response_id = dao.getVoteMax(vote_id);
+							switch (type_id)
+							{
+							case "ST01": dao.modifyMomentName(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;
+							
+							case "ST02": dao.modifyDateName(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;
+							case "ST03": dao.modifyPlaceName(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;
+							case "ST04": dao.modifyMinParticipant(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;
+							case "ST05": dao.modifyMaxParticipant(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;
+							case "ST06": dao.modifyNote(survey_response_id, moment_id);
+										 dao.modifyWhetherSurvey(survey_id);
+										 dao.modifyWhetherVote(vote_id);
+								break;	
+							
+							}
+							
+							check = 1;
+							model.addAttribute("check" + i, check);
+						}
+						
+					}
+					else
+					{
+						check = 1;
+						model.addAttribute("check" + i, check);
+					}
+					
+					model.addAttribute("check" + i, check);
 				}
 			}
-			
-			//model.addAttribute("survey_id" + i, survey_id);
-			model.addAttribute("voteReponse" + i, checkResponse);
-			
+				
 		}
 		
-		model.addAttribute("dto", dto);
+		model.addAttribute("momentList", dto);
+		model.addAttribute("partiList", partiList);
 		model.addAttribute("countJoin", countJoin);
 		model.addAttribute("countSurvey", typeCount);
 		
@@ -398,48 +528,71 @@ public class MomentController
 		return result;
 	}
 	
-	
-	/*
-	@RequestMapping(value = "/studentupdateform.action", method = RequestMethod.GET)
-	public String studentUpdateForm(String sid, Model model)
+	@RequestMapping("/momentvoteresponseinsert.action")
+	public String momentVoteResponseInsert(Model model, String moment_id, String group_id, String type_id, String survey_id, String survey_response_id, HttpSession session)
 	{
 		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
 		
-		IStudentDAO dao = sqlSession.getMapper(IStudentDAO.class);
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		model.addAttribute("search", dao.search(sid));
+		String member_id = dao.searchMemberId(user_id, group_id);
+		String participant_id = dao.getPartiId(member_id, moment_id);
+		String vote_id = dao.getVoteId(survey_id);
 		
-		result = "/WEB-INF/view/StudentUpdateForm.jsp";
+		dao.addVoteResponse(vote_id, survey_response_id, participant_id);
+		
+		result = "redirect:momentbuild.action?moment_id=" + moment_id  + "&group_id=" + group_id;
 		
 		return result;
 	}
 	
-	@RequestMapping(value = "/studentupdate.action", method = RequestMethod.POST)
-	public String studentUpdate(StudentDTO s)
+	// 인포
+	@RequestMapping("/momentinfochange.action")
+	public String momentVoteInfchange(Model model, String moment_id, String group_id, HttpSession session)
 	{
 		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
+		String phase_id = "MH03";
 		
-		IStudentDAO dao = sqlSession.getMapper(IStudentDAO.class);
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		dao.modify(s);
+		dao.modifyPhase(moment_id, phase_id);
 		
-		result = "redirect:studentlist.action";
+		result = "redirect:group.action?group_id=" + group_id;
 		
 		return result;
 	}
 	
-	@RequestMapping("/studentdelete.action")
-	public String studentDelete(String sid)
+	@RequestMapping("/momentinfo.action")
+	public String momentInfo(Model model, String group_id, String moment_id, HttpSession session)
 	{
 		String result = null;
+		String user_id = (String)session.getAttribute("user_id");
 		
-		IStudentDAO dao = sqlSession.getMapper(IStudentDAO.class);
+		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
-		dao.remove(sid);
+		MomentDTO momentList = dao.momentList(moment_id);
+		ArrayList<MomentDTO> partiList = dao.getPartiName(moment_id); 
+		String date_name = momentList.getDate_name();
 		
-		result = "redirect:studentlist.action";
+		if (date_name.length() >= 10)
+		{
+			if (date_name.length() > 10)
+			{
+				date_name = date_name.substring(0, 10);
+			}
+			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
+		}
+		
+		
+		model.addAttribute("momentList", momentList);
+		model.addAttribute("partiList", partiList);
+		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
+		
+		result = "/WEB-INF/view/MomentInfo.jsp";
 		
 		return result;
 	}
-	*/
+	
 }
