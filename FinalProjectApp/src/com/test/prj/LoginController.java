@@ -41,6 +41,7 @@ public class LoginController
 		String admin_id = null;
 		ILoginDAO dao = sqlSession.getMapper(ILoginDAO.class);
 		MemberDTO resultMember;
+		session.setMaxInactiveInterval(14440);	//-- 4시간
 		
 		try
 		{

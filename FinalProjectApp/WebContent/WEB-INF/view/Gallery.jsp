@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Group.jsp</title>
+<title>Gallery.jsp</title>
 <link rel="stylesheet" type="text/css" href="<%=cp %>/css/main.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
@@ -50,7 +50,8 @@
 
 	function galleryLink(gallery_id)
 	{
-		location.href = "gallerypage.action?gallery_id=?" + gallery_id;
+		var group_id = document.getElementById("group_id").value;
+		location.href = "gallerypage.action?group_id=" + group_id + "&gallery_id=" + gallery_id;
 	}
 
 </script>
@@ -92,7 +93,7 @@
 					갤러리
 				</span>
 				<span class="col-md-9">
-					<a href="galleryform.action?moment_id=<%=request.getParameter("moment_id") %>
+					<a href="galleryinsertform.action?moment_id=<%=request.getParameter("moment_id") %>
 					&group_id=<%=request.getParameter("group_id") %>" role="button" class="btn btn-success btn-xs" id="btnAdd"
 					style="vertical-align: bottom;">게시글 업로드</a>
 				</span>
@@ -108,7 +109,8 @@
 		    	<c:choose>
 					<c:when test="${galleryList != '[]' }">
 						<c:forEach var="article" items="${galleryList }">
-							<article><img onclick="galleryLink('${article.gallery_id}')" src="${article.root }" class="img"></article>
+							<article><img onclick="galleryLink('${article.gallery_id}')" 
+							src="<%=cp %>/images/img/gallery/${article.file_settingname}" class="img"></article>
 						</c:forEach>
 					</c:when>
 					
@@ -118,6 +120,7 @@
 				    	</div>
 				    </c:when>
 	        	</c:choose>
+	        	<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
 		    	</div>	
 		    </div>
 		    
