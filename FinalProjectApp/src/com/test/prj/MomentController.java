@@ -30,9 +30,14 @@ public class MomentController
 	public String momentList(Model model, String group_id, HttpSession session) throws ParseException
 	{
 		String result = null;
-		String user_id = (String)session.getAttribute("user_id");
+		String user_id = "";
 		String moment_id = "";
 		String type_id = "";
+		
+		user_id = (String)session.getAttribute("user_id");
+		
+		if (user_id == null)
+			result = "redirect:loginform.action";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
@@ -45,13 +50,24 @@ public class MomentController
 		{
 			for (MomentDTO dto : endTimeList)
 			{
+				// 현재 날짜로부터 계획기간까지 남은 시간 구하기
 				String plan_end_date = dto.getPlan_end_date();
 				java.util.Date d1 = dateFormat.parse(plan_end_date);
 				java.util.Date d2 = dateFormat.parse(sysdate);
 				long end_time = (d1.getTime() - d2.getTime()) / 1000;
 				
+				// ① 계획기간 끝나기 전에 멤버가 0명이 되면
+				if (dto.getParti_num() == 0)
+				{
+					type_id = "NY02";
+					moment_id = dto.getMoment_id();
+					dao.addNonactiveMoment(moment_id, type_id);
+				}
+				
+				// 계획기간이 끝났을 때
 				if (end_time <= 0)
 				{
+					// ② 모먼트 요소 미완성
 					if (dto.getMoment_name() == null
 							|| dto.getDate_name().length() < 19
 							|| dto.getPlace_name()  == null
@@ -59,27 +75,96 @@ public class MomentController
 							|| dto.getMax_participant()  == null)
 					{
 						type_id = "NY01";
-					/*	// 임시로 주석처리
+						moment_id = dto.getMoment_id();
+						dao.addNonactiveMoment(moment_id, type_id);
+					}	// ③ 0명은 아니지만 최소인원 미달
 					else if (dto.getMin_participant() > dto.getParti_num())
+					{
 						type_id = "NY02";
-					*/
-					
-					// 신고받아서 지워지는 경우도 추후 추가
-					
-					moment_id = dto.getMoment_id();
-					dao.addNonactiveMoment(moment_id, type_id);
+						moment_id = dto.getMoment_id();
+						dao.addNonactiveMoment(moment_id, type_id);
 					}
+						
 				}
-				
 			}
+				
 		}
-			
+		
 		String member_id = dao.searchMemberId(user_id, group_id);
 		
 		model.addAttribute("allCount", dao.allCount(group_id));
 		model.addAttribute("allList", dao.allList(group_id));
 		model.addAttribute("myList", dao.myList(group_id, member_id));
 		model.addAttribute("myCount", dao.myCount(group_id, member_id));
+		
+		// 그룹 초대합류 관련 코드 → 여기부터 합본
+	    IGroupDAO groupDao = sqlSession.getMapper(IGroupDAO.class);
+	      
+	    GroupInviteDTO groupDto = new GroupInviteDTO();
+	    groupDto.setUser_id(user_id);
+	    groupDto.setGroup_id(group_id);
+	    String gmId = groupDao.GroupMemberGMId(groupDto);
+	      
+	    model.addAttribute("gmId", gmId);
+	      
+	      
+	    // 그룹 관련 데이터 조회
+	    int managerCount = groupDao.managerCount(group_id);
+	    model.addAttribute("managerCount", managerCount);
+	      
+	    ArrayList<GroupDTO> managerList = new ArrayList<GroupDTO>();
+	    managerList = groupDao.managerList(group_id);
+	    model.addAttribute("managerList", managerList);
+	      
+	    ArrayList<GroupDTO> generalMemberList = new ArrayList<GroupDTO>();
+	    generalMemberList = groupDao.generalMemberList(group_id);
+	    model.addAttribute("generalMemberList", generalMemberList);
+	      
+	    String memberTotalCount = groupDao.groupMemberCount(group_id);
+	    model.addAttribute("memberTotalCount", memberTotalCount);
+	    System.out.println(memberTotalCount);
+	      
+	      
+	    IManagerDAO mDao = sqlSession.getMapper(IManagerDAO.class);
+	      
+	    GroupMemberDTO mDto = new GroupMemberDTO();
+	    mDto.setMatch_id(member_id);
+	    System.out.println(mDto.getMatch_id());
+	      
+	    model.addAttribute("group_id", group_id);
+	    model.addAttribute("member_id", member_id);
+	    
+	    int mTotCount = Integer.parseInt(memberTotalCount);
+	      
+	    if ( (mTotCount >= 5 && mTotCount <= 20 && managerCount < 1)  ||
+	         (mTotCount >= 21 && mTotCount <= 40 && managerCount < 2) ||
+	         (mTotCount >= 41 && mTotCount <= 60 && managerCount < 3) ||
+	         (mTotCount >= 61 && mTotCount <= 80 && managerCount < 4) ||
+	         (mTotCount >= 81 && mTotCount <= 100 && managerCount < 5) )
+	     {
+	        // 투표 관련 데이터 조회(매니저 최소인원보다 부족할 시에만 실행)
+	    	  ManagerVoteDTO vote = new ManagerVoteDTO();
+	         vote.setId(mDao.nextVoteId());
+	         vote.setGroup_id(group_id);
+	         mDao.voteAdd(vote);
+	         
+	         ArrayList<GroupMemberDTO> voteeList = new ArrayList<GroupMemberDTO>();
+	         voteeList = mDao.voteList(group_id);
+	         
+	         for (GroupMemberDTO member : voteeList)
+	         {
+	            ManagerVoteeDTO votee = new ManagerVoteeDTO();
+	            
+	            votee.generateUniqueId();
+	            votee.setVote_id(vote.getId());
+	            votee.setVotee_id(member.getMatch_id());   
+	            
+	            mDao.voteeAdd(votee);
+	         }
+	         
+	         model.addAttribute("vote_id", vote.getId());
+	      
+	      }
 		
 		result = "/WEB-INF/view/Group.jsp";
 		
@@ -255,7 +340,7 @@ public class MomentController
 		int countParti = dto2.getParti_num();
 		int countMin = dto2.getMin_participant();
 		
-		if (countParti >= countMin)
+		if (countParti >= countMin && dto.getPhase_id() == "MH01")
 		{
 			String phase_id = "MH02";
 			dao.modifyPhase(dto.getMoment_id(), phase_id);
@@ -373,6 +458,7 @@ public class MomentController
 									break;
 								case "ST03": dao.modifyPlaceName(survey_response_id, moment_id);
 											 dao.modifyWhetherSurvey(survey_id);
+											 dao.modifyPlaceDetail(moment_id);
 									break;
 								case "ST04": dao.modifyMinParticipant(survey_response_id, moment_id);
 											 dao.modifyWhetherSurvey(survey_id);
@@ -444,6 +530,7 @@ public class MomentController
 							case "ST03": dao.modifyPlaceName(survey_response_id, moment_id);
 										 dao.modifyWhetherSurvey(survey_id);
 										 dao.modifyWhetherVote(vote_id);
+										 dao.modifyPlaceDetail(moment_id);
 								break;
 							case "ST04": dao.modifyMinParticipant(survey_response_id, moment_id);
 										 dao.modifyWhetherSurvey(survey_id);
@@ -461,14 +548,12 @@ public class MomentController
 							}
 							
 							check = 1;
-							model.addAttribute("check" + i, check);
 						}
 						
 					}
 					else
 					{
 						check = 1;
-						model.addAttribute("check" + i, check);
 					}
 					
 					model.addAttribute("check" + i, check);
@@ -565,27 +650,45 @@ public class MomentController
 	}
 	
 	@RequestMapping("/momentinfo.action")
-	public String momentInfo(Model model, String group_id, String moment_id, HttpSession session)
+	public String momentInfo(Model model, String group_id, String moment_id, HttpSession session) throws ParseException
 	{
 		String result = null;
 		String user_id = (String)session.getAttribute("user_id");
+		String plan_end_date = "";
+		String sysdate = "";
+		String date_name = "";
 		
 		IMomentDAO dao = sqlSession.getMapper(IMomentDAO.class);
 		
 		MomentDTO momentList = dao.momentList(moment_id);
 		ArrayList<MomentDTO> partiList = dao.getPartiName(moment_id); 
-		String date_name = momentList.getDate_name();
 		
-		if (date_name.length() >= 10)
-		{
-			if (date_name.length() > 10)
-			{
-				date_name = date_name.substring(0, 10);
-			}
-			model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
-		}
+		MomentDTO dto = dao.momentList(moment_id);
+		plan_end_date = dto.getPlan_end_date();
+		//System.out.println(plan_end_date);
+		//--==>> 2024-09-10 17:00:00
 		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sysdate = dateFormat.format(new java.util.Date());
+		date_name = momentList.getDate_name();
 		
+		// 이미 완료된 모먼트인지(모먼트 일시가 현재 날짜보다 전인지) 확인
+		java.util.Date d1 = dateFormat.parse(date_name);
+		java.util.Date d2 = dateFormat.parse(sysdate);
+		long end_time = (d1.getTime() - d2.getTime()) / 1000;
+		
+		if (end_time <= 0)
+			model.addAttribute("endMoment", end_time);
+		
+		// 계획기간 지났는지 확인
+		java.util.Date d3 = dateFormat.parse(plan_end_date);
+		long plan_end_time = (d3.getTime() - d2.getTime()) / 1000;
+		
+		if (plan_end_time <= 0)
+			model.addAttribute("planEndMoment", plan_end_time);
+		
+		date_name = date_name.substring(0, 10);
+		model.addAttribute("countDate", dao.momentDateCount(user_id, date_name));
 		model.addAttribute("momentList", momentList);
 		model.addAttribute("partiList", partiList);
 		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));

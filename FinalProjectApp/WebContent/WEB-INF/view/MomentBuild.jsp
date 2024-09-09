@@ -148,6 +148,7 @@
 						$("#sv_place_name_others").val($("#place_name_others").val());
 					
 					$("#sv_place_name").attr("readonly", "readonly");
+					$("#juso").css("display", "none");
 					$("#sv_place_name_others").attr("readonly", "readonly");
 				}
 			}
@@ -367,7 +368,7 @@
 				break;
 				case "ST03": $(location).attr("href", "momentsurveyresponseinsert.action?moment_id=" + $("#moment_id").val()
 						 	 + "&type_id=" + $(this).val() + "&response=" + $("#sv_place_name").val()
-						 	 + "&group_id=" + $("#group_id").val() +  + "&others=" + $("#sv_place_name_others").val());
+						 	 + "&group_id=" + $("#group_id").val() + "&others=" + $("#sv_place_name_others").val());
 					break;
 				case "ST04": $(location).attr("href", "momentsurveyresponseinsert.action?moment_id=" + $("#moment_id").val()
 						 	 + "&type_id=" + $(this).val() + "&response=" + $("#sv_min_participant").val()
@@ -396,7 +397,7 @@
 			$("#voteResult_moment_name").attr("disabled", "disabled");
 			$("#voteResult_moment_name").text("투표 완료");
 			$("#" + $("#moment_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_moment_name']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -406,7 +407,7 @@
 			$("#voteResult_date_name").attr("disabled", "disabled");
 			$("#voteResult_date_name").text("투표 완료");
 			$("#" + $("#date_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_date_name']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -416,7 +417,7 @@
 			$("#voteResult_place_name").attr("disabled", "disabled");
 			$("#voteResult_place_name").text("투표 완료");
 			$("#" + $("#place_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_place_name']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -426,7 +427,7 @@
 			$("#voteResult_min_participant").attr("disabled", "disabled");
 			$("#voteResult_min_participant").text("투표 완료");
 			$("#" + $("#min_participant_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_min_participant']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -436,7 +437,7 @@
 			$("#voteResult_max_participant").attr("disabled", "disabled");
 			$("#voteResult_max_participant").text("투표 완료");
 			$("#" + $("#max_participant_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_max_participant']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -446,7 +447,7 @@
 			$("#voteResult_note").attr("disabled", "disabled");
 			$("#voteResult_note").text("투표 완료");
 			$("#" + $("#note_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_note']").click(function()
+			$("input:radio[name='vote_name']").click(function()
 			{
 				return false;
 			});
@@ -529,7 +530,7 @@
 		
 		$(".btn-vote").click(function()
 		{
-			if ($("input:radio[name='vote_moment_name']:checked").val() == "" || $("input:radio[name='vote_moment_name']:checked").val() == null)
+			if ($("input:radio[name='vote_name']:checked").val() == "" || $("input:radio[name='vote_name']:checked").val() == null)
 			{
 				alert("선택 후 투표 제출이 가능합니다.");
 				return;
@@ -539,32 +540,32 @@
 				switch ($(this).val())
 				{
 				case "ST01": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_moment_name']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#moment_name_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
 				case "ST02": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_date_name']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#date_name_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
 				case "ST03": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_place_name']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#place_name_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
 				case "ST04": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_min_participant']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#min_participant_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
 				case "ST05": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_max_participant']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#max_participant_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
 				case "ST06": $(location).attr("href", "momentvoteresponseinsert.action?moment_id=" + $("#moment_id").val()
-							 + "&survey_response_id=" + $("input:radio[name='vote_note']:checked").val()
+							 + "&survey_response_id=" + $("input:radio[name='vote_name']:checked").val()
 							 + "&type_id=" + $(this).val() + "&survey_id=" + $("#note_svId").val()
 						 	 + "&group_id=" + $("#group_id").val());
 					break;
@@ -644,7 +645,8 @@
 		{
 			result = "<td><h4 style='font-weight: bold;'>내 답변</h4>";
 			result += "<input type='text' id='sv_place_name' name='sv_place_name' class='form-control'";
-			result += "placeholder='장소 입력' style='width: 970px;'>";
+			result += "placeholder='주소 찾기 버튼을 눌러 주소를 검색해주세요.' style='width: 970px;' readonly='readonly'>";
+			result += "<br><button type='button' onclick='getAddr()' id='juso'>주소 찾기</button>";
 			result += "<br><h4 style='font-weight: bold;'>기타 의견</h4>";
 			result += "<input type='text' id='sv_place_name_others' placeholder='ex) 인천 사람 배려 좀;;' name='sv_place_name_others' class='form-control'";
 			result += "style='width: 970px;'>";
@@ -698,6 +700,26 @@
 		}
 		
 
+</script>
+
+<!-- 주소 검색, 지도 표시 기능 구현 -->
+<script type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+
+    function getAddr()
+    {
+        new daum.Postcode(
+        {
+            oncomplete: function(data) 
+            {
+                var addr = data.address;
+                
+                // 받아온 주소 넣기 
+                document.getElementById("sv_place_name").value = addr;
+                
+            }
+        }).open();
+    }
 </script>
 
 </head>
@@ -792,7 +814,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_moment_name" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">
@@ -844,7 +866,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_date_name" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">
@@ -896,7 +918,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_place_name" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">
@@ -946,7 +968,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_min_participant" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">
@@ -996,7 +1018,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_max_participant" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">
@@ -1047,7 +1069,7 @@
 									<label style="${selection.response == null ? 'display: none;' : 'display: inline;'}" 
 									for="${selection.survey_response_id }">- ${selection.response }</label>
 									<input type="radio" value="${selection.survey_response_id }" id="${selection.survey_response_id }"
-									name="vote_note" style="width: 972px; 
+									name="vote_name" style="width: 972px; 
 									${selection.response == null ? 'display: none;' : 'display: inline;'}">
 									<input type="text" readonly="readonly" value="${selection.others }" 
 									style="${selection.others == nulll ? 'display: none;' : 'display: inline;'}">

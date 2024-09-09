@@ -401,6 +401,14 @@
 			        WHERE ID = #{moment_id})
 	</update>
 	
+	<update id="modifyPlaceDetail">
+		UPDATE MM_PLACE
+		SET DETAIL_ID = 'ML02'
+		WHERE ID = (SELECT PLACE_ID
+		            FROM MOMENT
+		            WHERE ID = #{moment_id})
+	</update>
+	
 	<update id="modifyMinParticipant">
 		UPDATE MOMENT
 		SET MIN_PARTICIPANT = (SELECT SR.RESPONSE

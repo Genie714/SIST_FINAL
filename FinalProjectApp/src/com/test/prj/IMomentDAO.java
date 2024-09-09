@@ -153,6 +153,9 @@ public interface IMomentDAO
 	// 장소 수정
 	public int modifyPlaceName(@Param("survey_response_id") String survey_response_id, @Param("moment_id") String moment_id);
 	
+	// 장소 세부 단계 수정
+	public int modifyPlaceDetail(@Param("moment_id") String moment_id);
+	
 	// 최소 인원 수정
 	public int modifyMinParticipant(@Param("survey_response_id") String survey_response_id, @Param("moment_id") String moment_id);
 

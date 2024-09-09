@@ -37,26 +37,64 @@
 					return;
 				}
 				
+				
 				if ($(this).val() < 1)
 				{
-					if (confirm("해당 모먼트에 참여하시겠습니까?"))
+					if ($("#planEndMoment").val() != null && $("#planEndMoment").val() != "" && parseInt($("#planEndMoment").val()) < 1
+						&& ($("#endMoment").val() == null || $("#endMoment").val() == ""))
 					{
-						$("#myForm").submit();
+						alert("이미 계획기간이 끝난 모먼트에 참여할 수 없습니다.");
+						return;
+					}
+					else if ($("#endMoment").val() != null && $("#endMoment").val() != "" && parseInt($("#endMoment").val()) < 1)
+					{
+						if (confirm("모먼트에 실제로 참석하지 않았는데 어플리케이션 상에서 참여를 신청할 경우 패널티를 받을 수 있습니다. 그래도 해당 모먼트에 참여하시겠습니까?"))
+						{
+							$("#myForm").submit();
+						}
+					}
+					else
+					{
+						if (confirm("해당 모먼트에 참여하시겠습니까?"))
+						{
+							$("#myForm").submit();
+						}
 					}
 				}
 				else
 				{
-					if (confirm("해당 모먼트의 참여를 취소하시겠습니까?"))
+					if ($("#planEndMoment").val() != null && $("#planEndMoment").val() != "" && parseInt($("#planEndMoment").val()) < 1)
+					{
+						alert("이미 계획기간이 끝난 모먼트의 참여를 취소할 수 없습니다.");
+						return;
+					}
+					else if (confirm("해당 모먼트의 참여를 취소하시겠습니까?"))
 					{
 						location.href = "momentcancel.action?moment_id=" + $("#moment_id").val() + "&group_id=" + $("#group_id").val();
 					}
 				}
 			});
 			
+			$("#gallery").click(function()
+			{
+				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val());
+			});
+			
+			
 			$(".btn-default").click(function()
 			{
 				$(location).attr("href", "group.action?group_id=" + $("#group_id").val());
 			});
+			
+			if ($("#endMoment").val() != null && $("#endMoment").val() != "")
+			{
+				$("#endThing").css("display", "inline");
+				
+				if ($(".btn-success").val() > 0)
+				{
+					$("#adjustment").css("display", "inline");
+				}
+			}
 
 			
 		});
@@ -97,7 +135,7 @@
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
 					모먼트 인포 조회
 				<p></p>
-				<p style="font-size: small; color: blue;">▷ 현재 ${momentList.parti_num }명이 참여 중인 모먼트입니다.<br>
+				<p style="font-size: small; color: blue;">▷ ${momentList.parti_num }명이 ${endMoment <= 0 ? '참여한' : '참여 중인'} 모먼트입니다.<br>
 				<b style="font-size: small; color: purple;">&nbsp&nbsp&nbsp 인포 마감 : ${momentList.plan_end_date}</b>
 				</p>
 				<div>
@@ -221,8 +259,17 @@
 								${countJoin > 0 ? "참여 취소" : "참여" }</button>
 								<button type="button" class="btn btn-default">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${momentList.moment_id }">
-								<input type="hidden" id="phase" name="phase" class="form-control" value="${momentList.phase }">
+								<input type="hidden" id="phase" name="phase"value="${momentList.phase }">
 								<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
+								<input type="hidden" id="endMoment" value="${endMoment }">
+								<input type="hidden" id="planEndMoment" value="${planEndMoment }">
+							</td>
+						</tr>
+						
+						<tr id="endThing" style="display: none;">
+							<td>
+								<button type="button" id="adjustment" class="btn btn-info" style="display: none;">정산 import할 자리</button>
+								<button type="button" id="gallery" class="btn btn-info">갤러리</button>
 							</td>
 						</tr>
 					</table>
