@@ -115,7 +115,7 @@
 		
 			<div class="panel-heading" style="height: 100px;">
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
-					갤러리 페이지 조회
+					${momentName } - 갤러리 페이지 조회
 				</span>
 			</div>
 						

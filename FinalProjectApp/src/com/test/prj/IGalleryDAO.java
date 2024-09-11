@@ -11,7 +11,11 @@ import org.apache.ibatis.annotations.Param;
 
 public interface IGalleryDAO
 {
+	// 갤러리 모든 리스트 출력
 	public ArrayList<GalleryDTO> galleryList(@Param("moment_id") String moment_id);
+	
+	// 모먼트명(단일 값) 찾아오기
+	public GalleryDTO getMomentName(@Param("moment_id") String moment_id);
 	
 	// 갤러리 테이블 모든 레코드 개수 세기
 	public int galleryCount();

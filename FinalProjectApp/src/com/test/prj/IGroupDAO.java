@@ -2,6 +2,8 @@ package com.test.prj;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface IGroupDAO
 {
 
@@ -73,21 +75,69 @@ public interface IGroupDAO
 
    // 특정 그룹 정보 조회
    public GroupDTO groupInformation(String group_id);
-		
+      
    // 최근 일주일 이내에 생성된 그룹 조회
    public ArrayList<GroupDTO> recentList();
-		
+      
    // 그룹원이 제일 많은 그룹 아이디 조회
    public GroupDTO largeGroupId();
-		
+      
    // 특정 그룹명 COUNT 조회
    public int groupNameCount(String name);
-		
+      
    // 그룹명 검색 결과 조회
    public ArrayList<GroupDTO> searchGroupResult(String name);
-		
+      
    // 특정 회원의 가개설 그룹 COUNT 조회
    public int creationGroupCount(String user_id);
-
+   
+   //-- 김세연 9.10
+   
+   // 특정 모먼트명 COUNT 조회
+   public int momentNameCount(@Param("name") String name, @Param("group_id") String group_id);
+   
+   // 모먼트명 검색 결과 조회
+   public ArrayList<MomentDTO> searchMomentResult(@Param("name") String name, @Param("group_id") String group_id);
+   
+   //-- 민호 9.10
+   
+   // 참가인원이 가장 많았던 모먼트
+   public ArrayList<MomentDTO> mostParticipantsMoment(String group_id);
+   
+   // 가장 최근에 진행됐던 모먼트
+   public ArrayList<MomentDTO> mostRecentMoment(String group_id);
+   
+   // 가장 가까운 일시에 진행될 모먼트
+   public ArrayList<MomentDTO> earliestMomentProceed(String group_id);
+   
+   // 최근에 생성된 모먼트들(일주일)
+   public ArrayList<MomentDTO> createdMomentLastweek(String group_id);
+   
+   // 다시 김세연
+   // 그룹 생성자의 그룹 생성 코드 조회(개설 초대 위함) USER_ID 이용
+   public String creationGroupId(@Param("user_id") String user_id);
+   
+   // 그룹 생성자 ID 조회
+   public GroupDTO groupConstructor(@Param("user_id") String user_id, @Param("creation_id") String creation_id);
+   
+   // 초기 초대 테이블 INSERT
+   public int preInviteAdd(GroupInviteDTO dto);
+   
+   // 그룹 생성자의 그룹 생성 코드 조회(개설 초대 위함) MATCH_ID 이용
+   public String creationGroupIdmatch(@Param("outgoing_id") String match_id);
+   
+   // 다음 그룹 코드 가져오기
+   public String nextGRId();
+   
+   // TBL_GROUP INSERT
+   public int groupAdd(GroupDTO dto);
+   
+   // 가개설 그룹원 COUNT 확정 그룹으로 넘기기 위함
+   public int creationGroupMemberCount(String creation_id);
+   
+   // 확정 그룹 그룹 생성 신청 코드 조회
+   public ArrayList<GroupDTO> creationIdArr();
+   
+   // 09.11 예원 추가
   
 }

@@ -19,6 +19,13 @@
 		ORDER BY GL.UPLOAD_DATE DESC
 	</select>
 	
+	<select id="getMomentName" resultType="com.test.prj.GalleryDTO">
+		SELECT DISTINCT(MM.NAME) AS MOMENT_NAME
+		FROM GALLERY GL LEFT JOIN MOMENT MM
+		     ON GL.MOMENT_ID = MM.ID
+		WHERE GL.MOMENT_ID = #{moment_id}
+	</select>
+	
 	<select id="galleryCount" resultType="java.lang.Integer">
 		SELECT COUNT(*) AS COUNT
 		FROM GALLERY

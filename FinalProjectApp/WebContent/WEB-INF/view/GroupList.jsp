@@ -171,7 +171,8 @@
 					<td>${activeGroup.id }</td>
 					<td>${activeGroup.name }</td>
 					<td>${activeGroup.introduction }</td>
-					<td>${activeGroup.root }</td>
+					<td><img src="${activeGroup.root }" /></td>
+					<!-- <td><img src="\FinalProjectApp\images\img\icon\maru2.jpg" /></td> -->
 					<td>${activeGroup.open_date }</td>
 					<td>${activeCount }</td>
 					<td>

@@ -29,8 +29,14 @@ public class GalleryController
 	{
 		String result = null;
 		String user_id = (String) session.getAttribute("user_id");
-
+		String moment_name = "";
+		
 		IGalleryDAO dao = sqlSession.getMapper(IGalleryDAO.class);
+		
+		GalleryDTO dto = dao.getMomentName(moment_id);
+		moment_name = dto.getMoment_name();
+		
+		model.addAttribute("momentName", moment_name);
 		model.addAttribute("galleryList", dao.galleryList(moment_id));
 		model.addAttribute("galleryCount", dao.galleryList(moment_id).size());
 		model.addAttribute("countJoin", countJoin);
@@ -50,12 +56,17 @@ public class GalleryController
 		String user_id = (String) session.getAttribute("user_id");
 		String member_id = "";
 		String participant_id = "";
+		String moment_name = "";
 		
 		IGalleryDAO dao = sqlSession.getMapper(IGalleryDAO.class);
+		
+		GalleryDTO dto = dao.getMomentName(moment_id);
+		moment_name = dto.getMoment_name();
 		
 		member_id = dao.searchMemberId(user_id, group_id);
 		participant_id = dao.getPartiId(member_id, moment_id);
 		
+		model.addAttribute("momentName", moment_name);
 		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
 		model.addAttribute("moment_id", moment_id);
 		model.addAttribute("group_id", group_id);
@@ -109,8 +120,12 @@ public class GalleryController
 		String participant_id = "";
 		String uploade_date = "";
 		String sysdate = "";
+		String moment_name = "";
 		
 		IGalleryDAO dao = sqlSession.getMapper(IGalleryDAO.class);
+		
+		GalleryDTO dto = dao.getMomentName(moment_id);
+		moment_name = dto.getMoment_name();
 		
 		member_id = dao.searchMemberId(user_id, group_id);
 		participant_id = dao.getPartiId(member_id, moment_id);
@@ -135,6 +150,7 @@ public class GalleryController
 			
 		}
 
+		model.addAttribute("momentName", moment_name);
 		model.addAttribute("countJoin", dao.momentJoinCount(user_id, moment_id));
 		model.addAttribute("myGalleryList", myGalleryList);
 		model.addAttribute("commentList", commentList);

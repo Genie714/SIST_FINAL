@@ -125,7 +125,7 @@
 		
 			<div class="panel-heading" style="height: 60px;">
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
-					갤러리 사진 업로드
+					${momentName } - 갤러리 사진 업로드
 				</span>
 				<span style="color: red;">※ 최대 10장</span>
 			</div>

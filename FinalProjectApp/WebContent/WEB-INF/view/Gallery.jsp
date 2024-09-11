@@ -104,7 +104,7 @@
 			<!-- <div class="panel-heading row"> -->
 			<div class="panel-heading" style="height: 60px;">
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
-					갤러리
+					${momentName } - 갤러리
 				</span>
 				<span class="col-md-9">
 					<a href="galleryinsertform.action?moment_id=<%=request.getParameter("moment_id") %>
