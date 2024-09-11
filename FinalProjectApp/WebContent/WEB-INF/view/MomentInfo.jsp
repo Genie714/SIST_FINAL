@@ -77,7 +77,8 @@
 			
 			$("#gallery").click(function()
 			{
-				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val());
+				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val()
+								+ "&countJoin=" + $("#joinBtn").val());
 			});
 			
 			
@@ -255,7 +256,7 @@
 						
 						<tr>
 							<td style="text-align: center;">
-								<button type="button" class="btn btn-success" value="${countJoin }">
+								<button type="button" class="btn btn-success" id="joinBtn" value="${countJoin }">
 								${countJoin > 0 ? "참여 취소" : "참여" }</button>
 								<button type="button" class="btn btn-default">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${momentList.moment_id }">

@@ -335,12 +335,12 @@ public class MomentController
 		
 		dao.addMomentMember(dto);
 		
-		MomentDTO dto2 = dao.momentList(dto.getMoment_id());
+		dto = dao.momentList(dto.getMoment_id());
 		
-		int countParti = dto2.getParti_num();
-		int countMin = dto2.getMin_participant();
+		int countParti = dto.getParti_num();
+		int countMin = dto.getMin_participant();
 		
-		if (countParti >= countMin && dto.getPhase_id() == "MH01")
+		if (countParti >= countMin && dto.getPhase_id().equals("MH01"))
 		{
 			String phase_id = "MH02";
 			dao.modifyPhase(dto.getMoment_id(), phase_id);

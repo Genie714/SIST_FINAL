@@ -16,7 +16,7 @@
 		     LEFT JOIN US_INFORMATION UI
 		     ON GM.USER_ID = UI.USER_ID
 		WHERE GL.MOMENT_ID = #{moment_id}
-		ORDER BY GL.UPLOAD_DATE
+		ORDER BY GL.UPLOAD_DATE DESC
 	</select>
 	
 	<select id="galleryCount" resultType="java.lang.Integer">
@@ -66,7 +66,21 @@
 		     LEFT JOIN US_INFORMATION UI
 		     ON GM.USER_ID = UI.USER_ID
 		WHERE GL.ID = #{gallery_id}
-		ORDER BY GL.UPLOAD_DATE
+		ORDER BY GL.UPLOAD_DATE DESC
+	</select>
+	
+	<select id="countMyPicture" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM GALLERY
+		WHERE ID = #{gallery_id}
+		  AND PARTICIPANT_ID = #{participant_id}
+	</select>
+	
+	<select id="PictureDeleteOk" resultType="java.lang.String">
+		SELECT UPLOAD_DATE
+		FROM GALLERY
+		WHERE ID = #{gallery_id}
+		  AND PARTICIPANT_ID = #{participant_id}
 	</select>
 
 	<select id="countComment" resultType="java.lang.Integer">
@@ -75,19 +89,63 @@
 		WHERE GALLERY_ID = #{gallery_id}
 	</select>
 	
-	<select id="GalleryCommentList" resultType="com.test.prj.GalleryDTO">
+	<select id="galleryCommentList" resultType="com.test.prj.GalleryDTO">
 		SELECT GC.ID AS COMMENT_ID, GC.WRITER_ID AS WRITER_ID
 		     , GC.CONTENTS AS CONTENTS
 		     , TO_CHAR(GC.WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS WRITE_DATE
 		     , UI.NAME AS WRITER_NAME
-		     , (CASE WHEN GC.WRITER_ID = 'GM02' THEN 1 ELSE 0 END) AS MY_COUNT
+		     , (CASE WHEN GC.WRITER_ID = #{member_id} THEN 1 ELSE 0 END) AS MY_COUNT
 		FROM GL_COMMENT GC LEFT JOIN GR_MATCH GM
 		     ON GC.WRITER_ID = GM.ID
 		     LEFT JOIN US_INFORMATION UI
 			 ON GM.USER_ID = UI.USER_ID
 		WHERE GC.GALLERY_ID = #{gallery_id}
-		ORDER BY GC.WRITE_DATE
+		ORDER BY GC.WRITE_DATE DESC
 	</select>
+	
+	<insert id="addGalleryComment">
+		INSERT INTO GL_COMMENT(ID, GALLERY_ID, WRITER_ID, CONTENTS, WRITE_DATE)
+		VALUES('GC0' || GLCOMMENTSEQ.NEXTVAL, #{gallery_id}, #{member_id}, #{contents}, SYSDATE)
+	</insert>
+
+	<select id="momentJoinCount" resultType="java.lang.Integer">
+		SELECT COUNT(*) AS COUNT
+		FROM MM_PARTICIPANT MT LEFT JOIN GR_MATCH GM
+		    ON GM.ID = MT.MEMBER_ID
+		    LEFT JOIN TBL_USER US
+		    ON US.ID = GM.USER_ID
+		WHERE MT.MOMENT_ID = #{moment_id}
+		  AND US.ID = #{user_id}
+		  AND (SELECT COUNT(*)
+               FROM MM_QUIT
+               WHERE QITER_ID = MT.ID) = 0
+          AND MT.MOMENT_ID NOT IN (SELECT MOMENT_ID
+                   	 			   FROM MM_NONACTIVE)
+	</select>
+	
+	<select id="getSettingFileName" resultType="com.test.prj.GalleryDTO">
+		SELECT FILE_SETTINGNAME
+		FROM GALLERY
+		WHERE ID = #{gallery_id}
+	</select>
+
+	<delete id="removeGalleryCommentAll">
+		DELETE
+		FROM GL_COMMENT
+		WHERE GALLERY_ID = #{gallery_id}
+	</delete>
+	
+	<delete id="removeGallery">
+		DELETE
+		FROM GALLERY
+		WHERE ID = #{gallery_id}
+	</delete>
+	
+	<delete id="removeGalleryComment">
+		DELETE
+		FROM GL_COMMENT
+		WHERE ID = #{comment_id}
+	</delete>
 	
 
 </mapper>

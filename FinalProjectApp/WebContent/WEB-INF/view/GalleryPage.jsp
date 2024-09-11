@@ -43,17 +43,39 @@
 			
 			$("#back").click(function()
 			{
-				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val());
+				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val()
+							+ "&countJoin=" + $("#countJoin").val());
 			});
 			
-			$(".btn-success").click(function()
+			$("#submitBtn").click(function()
 			{
 				if (confirm("댓글을 등록하시겠습니까?"))
 				{
 					$(location).attr("href", "gallerycommentinsert.action?group_id=" + $("#group_id").val()
-							+ "&moment_id=" + $("#moment_id").val()	 
-							+ "&gallery_id=" + $("#gallery_id").val() + "&contents=" + $("#comment").val());
+							+ "&gallery_id=" + $("#gallery_id").val() + "&contents=" + $("#comment").val()
+							+ "&moment_id=" + $("#moment_id").val());
 				}
+			});
+			
+			$("#deleteGallery").click(function()
+			{
+				if (confirm("게시글을 삭제하시겠습니까?"))
+				{
+					$(location).attr("href", "galleryremove.action?group_id=" + $("#group_id").val()
+							+ "&gallery_id=" + $("#gallery_id").val() + "&moment_id=" + $("#moment_id").val());
+				}
+				
+			});
+			
+			$("#deleteComment").click(function()
+			{
+				if (confirm("댓글을 삭제하시겠습니까?"))
+				{
+					$(location).attr("href", "gallerycommentremove.action?group_id=" + $("#group_id").val()
+							+ "&gallery_id=" + $("#gallery_id").val() + "&moment_id=" + $("#moment_id").val()
+							+ "&comment_id=" + $(this).val());
+				}
+				
 			});
 			
 			
@@ -130,12 +152,19 @@
 						
 						<tr>
 							<td>
+								<div>
+									<button type="button" class="btn btn-default" 
+									style="${deleteOk == 1 ? 'display: inline' : 'display: none'}"
+									 id="deleteGallery">삭제</button>
+								</div>
+								<br>
 								<div class="input-group" role="group">
 									<span class="input-group-addon" id="basic-addon2" style="width: 100px; font-weight: bold;">
-										<%-- <img src="<%=cp %>/images/img/gallery/${myGalleryList.file_settingname}" class="img"> --%>
-										<img src="<%=cp %>/images/img/gallery/maru.jpg" class="img">
+										<img id="image" src="<%=cp %>/images/img/gallery/${myGalleryList.file_settingname}"
+										 class="img">
 									</span>
 								</div>
+								
 							</td>
 						</tr>
 						<tr style="height: 10px;">
@@ -161,8 +190,9 @@
 										<span>작성일 : ${comment.write_date }</span>
 									</div>
 									<div>
-										<button type="button" class="btn btn-default"
-										style="${comment.my_count == 0 ? 'display: none' : 'display: inline'}">삭제</button>
+										<button type="button" class="btn btn-default" value="${comment.comment_id }"
+										style="${comment.my_count == 0 ? 'display: none' : 'display: inline'}"
+										id="deleteComment">삭제</button>
 										<button type="button" class="btn btn-danger"
 										style="${comment.my_count == 1 ? 'display: none' : 'display: inline'}">신고</button>
 									</div>
@@ -179,7 +209,7 @@
 								</div>
 								<br>
 								<div>
-									<button type="button" class="btn btn-success">등록</button>
+									<button type="button" class="btn btn-success" id="submitBtn">등록</button>
 									<button type="reset" class="btn btn-default">취소</button>
 								</div>
 							</td>
@@ -188,13 +218,13 @@
 						<tr style="height: 10px;">
 						</tr>
 						
-						
 						<tr>
 							<td style="text-align: center;">
 								<button type="button" class="btn btn-default" id="back">목록으로</button>
 								<input type="hidden" id="moment_id" name="moment_id" value="${myGalleryList.moment_id }">
 								<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
 								<input type="hidden" id="gallery_id" value="<%=request.getParameter("gallery_id") %>">
+								<input type="hidden" id="countJoin" value="${countJoin }">
 							</td>
 						</tr>
 						

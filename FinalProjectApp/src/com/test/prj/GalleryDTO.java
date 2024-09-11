@@ -8,6 +8,7 @@ public class GalleryDTO
 {
 	private String user_id, user_name;
 	private String group_id, group_name;
+	private String member_id;
 	
 	private String participant_id, participant_name;
 	
@@ -22,10 +23,17 @@ public class GalleryDTO
 	private String comment_id, contents;
 	private String write_date;
 	
-	private String writer_id, writer_name;
-	
+	private String writer_name;
 	private String my_count;
 	
+	public String getMember_id()
+	{
+		return member_id;
+	}
+	public void setMember_id(String member_id)
+	{
+		this.member_id = member_id;
+	}
 	public String getMy_count()
 	{
 		return my_count;
@@ -33,14 +41,6 @@ public class GalleryDTO
 	public void setMy_count(String my_count)
 	{
 		this.my_count = my_count;
-	}
-	public String getWriter_id()
-	{
-		return writer_id;
-	}
-	public void setWriter_id(String writer_id)
-	{
-		this.writer_id = writer_id;
 	}
 	public String getWriter_name()
 	{

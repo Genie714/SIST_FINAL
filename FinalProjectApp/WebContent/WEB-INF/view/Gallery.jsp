@@ -47,11 +47,25 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-
+	
+	$(document).ready(function()
+	{
+		$("#btnAdd").click(function()
+		{
+			if ($("#countJoin").val() == 0)
+			{
+				alert("모먼트에 참여하지 않은 그룹원은 게시글 작성이 불가능합니다.");
+				return false;
+			}
+		});
+	});
+	
 	function galleryLink(gallery_id)
 	{
 		var group_id = document.getElementById("group_id").value;
-		location.href = "gallerypage.action?group_id=" + group_id + "&gallery_id=" + gallery_id;
+		var moment_id = document.getElementById("moment_id").value;
+		location.href = "gallerypage.action?group_id=" + group_id + "&gallery_id=" + gallery_id
+						+ "&moment_id=" + moment_id;
 	}
 
 </script>
@@ -94,7 +108,8 @@
 				</span>
 				<span class="col-md-9">
 					<a href="galleryinsertform.action?moment_id=<%=request.getParameter("moment_id") %>
-					&group_id=<%=request.getParameter("group_id") %>" role="button" class="btn btn-success btn-xs" id="btnAdd"
+					&group_id=<%=request.getParameter("group_id") %>
+					" role="button" class="btn btn-success btn-xs" id="btnAdd"
 					style="vertical-align: bottom;">게시글 업로드</a>
 				</span>
 			</div>
@@ -121,6 +136,8 @@
 				    </c:when>
 	        	</c:choose>
 	        	<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
+	        	<input type="hidden" id="moment_id" name="moment_id" value="<%=request.getParameter("moment_id") %>">
+	        	<input type="hidden" id="countJoin" value="${countJoin }">
 		    	</div>	
 		    </div>
 		    

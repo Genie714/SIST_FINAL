@@ -42,6 +42,7 @@
 		$(document).ready(function()
 		{
 			
+			
 			if ($("#countJoin").val() < 1)
 			{
 				$(".btn-info").css("display", "none");
@@ -397,60 +398,41 @@
 			$("#voteResult_moment_name").attr("disabled", "disabled");
 			$("#voteResult_moment_name").text("투표 완료");
 			$("#" + $("#moment_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
 		}
 		if ($("#date_name_voteNum").val() != "" && $("#date_name_voteNum").val() > 0)
 		{
 			$("#voteResult_date_name").attr("disabled", "disabled");
 			$("#voteResult_date_name").text("투표 완료");
 			$("#" + $("#date_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
+			
 		}
 		if ($("#place_name_voteNum").val() != "" && $("#place_name_voteNum").val() > 0)
 		{
 			$("#voteResult_place_name").attr("disabled", "disabled");
 			$("#voteResult_place_name").text("투표 완료");
 			$("#" + $("#place_name_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
+			
 		}
 		if ($("#min_participant_voteNum").val() != "" && $("#min_participant_voteNum").val() > 0)
 		{
 			$("#voteResult_min_participant").attr("disabled", "disabled");
 			$("#voteResult_min_participant").text("투표 완료");
 			$("#" + $("#min_participant_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
+			
 		}
 		if ($("#max_participant_voteNum").val() != "" && $("#max_participant_voteNum").val() > 0)
 		{
 			$("#voteResult_max_participant").attr("disabled", "disabled");
 			$("#voteResult_max_participant").text("투표 완료");
 			$("#" + $("#max_participant_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
+			
 		}
 		if ($("#note_voteNum").val() != "" && $("#note_voteNum").val() > 0)
 		{
 			$("#voteResult_note").attr("disabled", "disabled");
 			$("#voteResult_note").text("투표 완료");
 			$("#" + $("#note_selectId").val()).attr("checked", "checked");
-			$("input:radio[name='vote_name']").click(function()
-			{
-				return false;
-			});
+			
 		}
 		
 		if ($("#moment_name_check").val() != "[]" && $("#moment_name_check").val() != "" && $("#moment_name_check").val() != null)
@@ -491,6 +473,7 @@
 			$("#result_moment_name").css("display", "none");
 			$("#cr_moment_name").text("확정");
 			$("#cr_moment_name").attr("disabled", "disabled");
+			
 		}
 		if ($("#date_name_complete").val() != "" && $("#date_name_complete").val() != null && parseInt($("#date_name_complete").val()) > 0)
 		{
@@ -636,7 +619,7 @@
 			result += "style='width: 970px;'>";
 			
 			result += "<br><button type='button' class='btn btn-primary btn-survey' id='sm_date_name'";
-			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;' value='ST02'>제출</button>";
+			result += "style='font-size: 12pt; font-weight: bold; width: 100px; height: 35px;' value='ST02'>제출</button></td>";
 			
 			return result;
 		}

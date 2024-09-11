@@ -1,10 +1,51 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Enumeration"%>
+<%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
+<%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Calendar"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
    request.setCharacterEncoding("UTF-8");
    String cp = request.getContextPath();
+%>
+<%
+	MultipartRequest multipart = null;
+	String file_realname = "";
+	String file_settingname = "";
+	String result = "";
+	
+	try
+	{
+	   String path = "C:\\Final\\SIST_FINAL\\FinalProjectApp\\WebContent\\images\\img\\gallery";    // 학원 컴 디렉터리
+	   //String path = "C:\\Final\\FinalProjectApp\\WebContent\\images\\img\\gallery";    //-- 노트북 디렉터리
+	   int size = 5 * 1024 * 1024;
+	   
+	   multipart = new MultipartRequest(request, path, size, "UTF-8", new DefaultFileRenamePolicy());
+	   
+	   for (int i = 0; i < 10; i++)
+	   {
+		 if (multipart.getOriginalFileName("file" + (i + 1)) == null)
+		 {
+			 file_realname = file_realname.substring(0, file_realname.length() - 3);
+			 file_settingname = file_settingname.substring(0, file_settingname.length() - 3);
+			 break;
+		 }
+	     else
+	     {
+	    	 file_realname += multipart.getOriginalFileName("file" + (i + 1)) + "///";
+	   	 	 file_settingname += multipart.getFilesystemName("file" + (i + 1)) + "///";
+	   	 }
+	   }
+	   
+		    result = "galleryinsert.action?settingfiles=" + file_settingname + "&realfiles=" + file_realname + "&path=" + path;
+		    
+	 } 
+	 catch(Exception e) 
+	 {
+		 System.out.println(e.toString());
+	 }
+
 %>
 <!DOCTYPE html>
 <html>
@@ -26,37 +67,28 @@
 
 <script type="text/javascript">
 
-		var countFiles = 1;
-
 		$(document).ready(function()
 		{
-			$(".btn-success").click(function()
+			$("#submitBtn").click(function()
 			{
-				var files = "";
-				
-				for (var i = 1; i <= countFiles; i++)
+				if (confirm("게시글을 등록하시겠습니까?"))
 				{
-					files += $("#file" + i).val().replace("C:\\fakepath\\", "");
-					files += "//";
+					$(location).attr("href", "<%=result %>" + "&group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val()
+							+ "&countJoin=" + $("#countJoin").val());
 				}
-				
-				$(location).attr("href", "galleryinsert.action?group_id=" + $("#group_id").val()
-								 + "&moment_id=" + $("#moment_id").val() + "&files=" + files);
 			});
 			
-			
-			$("#cancel").click(function()
+			$("#cancelBtn").click(function()
 			{
-				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val());
+				$(location).attr("href", "gallery.action?group_id=" + $("#group_id").val() + "&moment_id=" + $("#moment_id").val()
+								+ "&countJoin=" + $("#countJoin").val());
 			});
 
 		});
-		
 	    
-		function uploadFile()
+		function uploadFile(num)
 	    {
-	        countFiles++;
-	        $("#files").append("<br>" + "<input type='file' id='file" + countFiles + "' accept='image/*'>");
+	        $("#file" + num).css("display", "inline");
 	    }
 
 </script>
@@ -78,7 +110,7 @@
 			<ul class="nav navbar-nav">
 				<li class="active">
 					<a href="group.action">
-						모먼트 <span class="sr-only">(current)</span>
+						갤러리 <span class="sr-only">(current)</span>
 					</a>
 				</li>
 			</ul>
@@ -95,26 +127,53 @@
 				<span style="font-size: 17pt; font-weight: bold;" class="col-md-3">
 					갤러리 사진 업로드
 				</span>
+				<span style="color: red;">※ 최대 10장</span>
 			</div>
 			
 			<div class="panel-body">
-				<form action="galleryinsert.action" method="post" id="myForm">
-
+				<form action="" method="post" enctype="multipart/form-data" id="myForm" name="form">
 					<div id="files">
-						<input type="file" id="file1" accept="image/*" required="required">
+						<input type="file" id="file1" name="file1"
+						accept="image/gif, image/jpeg, image/png" required="required" onchange="uploadFile(2)">
 						<br>
-						<input type="button" class="btn btn-default" id="file_upload" 
-						value="파일 추가 등록" onclick="uploadFile()">
-						<br>
+						<input type="file" id="file2" name="file2" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(3)">
+						<br><br>
+						<input type="file" id="file3" name="file3" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(4)">
+						<br><br>
+						<input type="file" id="file4" name="file4" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(5)">
+						<br><br>
+						<input type="file" id="file5" name="file5" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(6)">
+						<br><br>
+						<input type="file" id="file6" name="file6" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(7)">
+						<br><br>
+						<input type="file" id="file7" name="file7" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(8)">
+						<br><br>
+						<input type="file" id="file8" name="file8" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(9)">
+						<br><br>
+						<input type="file" id="file9" name="file9" style="display: none;"
+						accept="image/gif, image/jpeg, image/png" onchange="uploadFile(10)">
+						<br><br>
+						<button type="submit" class="btn btn-success" id="upload">사진 업로드</button>
+						<input type="file" id="file10" name="file10" style="display: none;"
+						accept="image/gif, image/jpeg, image/png">
 					</div>
 					
 					<br><br>
-					<button type="button" class="btn btn-success" id="upload">업로드</button>
-					<button type="reset" class="btn btn-default" id="cancel">취소</button>
+					<button type="button" class="btn btn-success" id="submitBtn">작성</button>
+					<button type="reset" class="btn btn-default" id="cancelBtn">취소</button>
 					<br>
 					
-					<input type="hidden" id="group_id" value="<%=request.getParameter("group_id") %>">
-					<input type="hidden" id="moment_id" value="<%=request.getParameter("moment_id") %>">
+					<input type="hidden" id="group_id" name="group_id" value="<%=request.getParameter("group_id") %>">
+					<input type="hidden" id="moment_id" name="moment_id" value="<%=request.getParameter("moment_id") %>">
+					<input type="hidden" id="participant_id" name="participant_id" value="<%=request.getParameter("participant_id") %>">
+					<input type="hidden" id="countJoin" value="${countJoin }">
 				</form>
 			</div>
 		

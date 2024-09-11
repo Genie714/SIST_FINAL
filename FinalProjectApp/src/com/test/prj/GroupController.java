@@ -112,7 +112,6 @@ public class GroupController
 		
 		IGroupDAO dao = sqlSession.getMapper(IGroupDAO.class);
 		result = "/WEB-INF/view/GroupNameCountAjax.jsp?count=" + dao.groupNameCount(name);
-		System.out.println(dao.groupNameCount(name));
 		
 
 		return result;
@@ -190,7 +189,6 @@ public class GroupController
 		dao.creationAdd(dto);
 		dao.matchAdd(dto);
 		
-		System.out.println(dtoInvite.getCreate_id());
 		
 		// 초기 초대 INSERT
 		dtoInvite.generateUniqueId();
